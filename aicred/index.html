@@ -20,271 +20,328 @@
   <script type="text/babel">
 const { useState } = React;
 
-const data = {
-  score: 7.6,
-  targetScore: 9.0,
-  progress: 70,
-  lastUpdated: '2025-12-28',
+// =============================================================================
+// DATA: Decision History is the spine - everything links to/from it
+// =============================================================================
 
-  modules: [
-    { id: 1, name: 'Your Prompt Pattern Library', status: 'completed' },
-    { id: 2, name: 'Systematic Prompt Refinement Through Controlled Iteration', status: 'completed' },
-    { id: 3, name: 'Pattern Orchestration: Composing Multi-Step Workflows', status: 'completed' },
-    { id: 4, name: 'Pattern Selection: Single vs. Compound Workflows', status: 'completed' },
-    { id: 5, name: 'Pattern Library Health: When to Refactor, Retire, or Rebuild', status: 'active' },
-  ],
-
-  // Pattern library with health metrics for Module 5 audit
-  patterns: [
-    {
-      name: 'Systematic Prompt Iteration Protocol',
-      type: 'prompt',
-      location: 'patterns/prompt-patterns/',
-      description: 'Baseline → Hypothesis → Minimal Variant → Test → Compare',
-      meta: true,
-      lastUsed: '2025-12-24',
-      monthlyUsesActual: 6,
-      monthlyUsesExpected: 8,
-      cognitiveLoad: 'medium',
-      maintenanceBurden: 3,
-      status: 'stable'
-    },
-    {
-      name: 'Selective Deep Dive Pattern',
-      type: 'prompt',
-      location: 'patterns/prompt-patterns/',
-      description: 'Two-pass: classify + triage → conditional deep analysis',
-      lastUsed: '2025-12-28',
-      monthlyUsesActual: 4,
-      monthlyUsesExpected: 5,
-      cognitiveLoad: 'medium',
-      maintenanceBurden: 2,
-      status: 'stable'
-    },
-    {
-      name: 'Multi-Agent Adversarial Review',
-      type: 'prompt',
-      location: 'patterns/prompt-patterns/',
-      description: 'Challenger role → issue/evidence/severity/fix format',
-      lastUsed: '2025-12-20',
-      monthlyUsesActual: 2,
-      monthlyUsesExpected: 4,
-      cognitiveLoad: 'high',
-      maintenanceBurden: 4,
-      status: 'review'
-    },
-    {
-      name: 'Module 4 Decision Framework',
-      type: 'workflow',
-      location: 'Session Briefing',
-      description: '4 heuristics for single vs compound vs novel pattern selection',
-      lastUsed: '2025-12-28',
-      monthlyUsesActual: 1,
-      monthlyUsesExpected: 3,
-      cognitiveLoad: 'low',
-      maintenanceBurden: 1,
-      status: 'new'
-    },
-    {
-      name: 'Canonical Base with Overlays',
-      type: 'architectural',
-      location: 'patterns/',
-      description: 'Single authoritative base → lightweight overlays',
-      lastUsed: '2025-12-14',
-      monthlyUsesActual: 3,
-      monthlyUsesExpected: 3,
-      cognitiveLoad: 'low',
-      maintenanceBurden: 2,
-      status: 'stable'
-    },
-    {
-      name: 'Targeted Artifact Generation',
-      type: 'architectural',
-      location: 'patterns/',
-      description: 'KB context + audience data → bespoke artifact',
-      lastUsed: '2025-12-16',
-      monthlyUsesActual: 2,
-      monthlyUsesExpected: 5,
-      cognitiveLoad: 'high',
-      maintenanceBurden: 5,
-      status: 'review'
-    },
-    {
-      name: 'Skill Forge Pattern',
-      type: 'workflow',
-      location: 'patterns/',
-      description: 'Heterogeneous deliberation → human articulation → reusable skill',
-      lastUsed: '2025-12-28',
-      monthlyUsesActual: 0,
-      monthlyUsesExpected: 2,
-      cognitiveLoad: 'high',
-      maintenanceBurden: 6,
-      status: 'experimental'
-    },
-  ],
-
-  currentExercise: {
-    name: 'Pattern Audit: Measuring Health and Planning Retirement',
-    module: 5,
-    estimatedTime: '45 min',
-    focus: 'Patterns evolve, accumulate cruft, and outlive their usefulness. Learn to measure pattern health and retire patterns that no longer earn their cognitive load.',
-    phases: [
-      {
-        id: 1,
-        name: 'Pattern Inventory and Usage Measurement',
-        time: '10 min',
-        status: 'pending',
-        description: 'List every pattern, measure actual vs expected usage, flag mismatches'
-      },
-      {
-        id: 2,
-        name: 'Cognitive Load Measurement',
-        time: '10 min',
-        status: 'pending',
-        description: 'Score each pattern: Low/Medium/High based on explainability and parameters'
-      },
-      {
-        id: 3,
-        name: 'Maintenance Burden Analysis',
-        time: '10 min',
-        status: 'pending',
-        description: 'Calculate: (Failures×2) + Mods + (Deps×3) + Fix time'
-      },
-      {
-        id: 4,
-        name: 'Pattern Triage and Consolidation',
-        time: '10 min',
-        status: 'pending',
-        description: 'Create merge, deprecate, refactor lists with justifications'
-      },
-      {
-        id: 5,
-        name: 'Pattern Lifecycle Policy',
-        time: '5 min',
-        status: 'pending',
-        description: 'Write promotion and retirement rules with numerical thresholds'
-      },
-    ],
-    successCriteria: [
-      'Health metrics (usage, cognitive load, maintenance burden) for every pattern with numerical scores',
-      'Three triage lists (merge, deprecate, refactor) with specific justifications',
-      'Written lifecycle policy with explicit numerical thresholds',
-      'At least one pattern identified for retirement with lesson learned'
-    ],
-    healthDimensions: [
-      { name: 'Cognitive Load', icon: '🧠', desc: 'Mental overhead to use this pattern' },
-      { name: 'Maintenance Burden', icon: '🔧', desc: 'How often it breaks, how hard to fix' },
-      { name: 'Opportunity Cost', icon: '⚖️', desc: 'What could you build instead' },
-    ]
+const decisions = [
+  {
+    id: 'stevens-essay',
+    problem: 'Stevens Essay ("The Rage We Forgot to Name")',
+    status: 'abandoned',
+    date: '2025-12-28',
+    reason: 'Not recurring — literary close reading is one-off, can\'t measure across approaches',
+    lesson: 'Module 4 needs problems that recur and can be measured',
+    patternsConsidered: ['skill-forge'],
+    module: 4
   },
-
-  evidenceLog: [
-    { date: '2025-12-24', work: 'Systematic Prompt Iteration Protocol documented', module: 2 },
-    { date: '2025-12-24', work: 'Memento classifier: 26% → 100% via structural constraint', module: 2 },
-    { date: '2025-12-24', work: 'Selective Deep Dive Pattern documented', module: 3 },
-    { date: '2025-12-25', work: 'Module 3 Progress Check completed', module: 3 },
-    { date: '2025-12-28', work: 'Three-Approach Test completed (JSX → HTML)', module: 4 },
-    { date: '2025-12-28', work: 'Decision Framework: 4 heuristics documented', module: 4 },
-    { date: '2025-12-28', work: 'Module 4 Progress Check taken', module: 4 },
-  ],
-
-  decisionFramework: {
-    title: 'Module 4 Decision Framework',
-    heuristics: [
-      { id: 1, rule: 'Use single prompt when transformation is deterministic and all context is in the input' },
-      { id: 2, rule: 'Use compound workflow when success depends on external context' },
-      { id: 3, rule: 'Use novel pattern when building reusable infrastructure for 10+ uses' },
-      { id: 4, rule: "Don't use prompts when the 'problem' is running commands — that's not a prompt problem" },
+  {
+    id: 'skill-forge-stevens',
+    problem: 'Skill Forge Pattern on Stevens Essay',
+    status: 'rejected',
+    date: '2025-12-28',
+    reason: 'Fails overengineering test — no recurring problem class to amortize deliberation cost',
+    lesson: 'Skill Forge requires problems likely to recur; one-off essays don\'t qualify',
+    patternsConsidered: ['skill-forge'],
+    module: 4
+  },
+  {
+    id: 'jsx-gitpages',
+    problem: 'JSX → GitPages Publishing',
+    status: 'completed',
+    date: '2025-12-28',
+    reason: 'Recurs (every artifact), measurable (deploy success Y/N), current process unsatisfying',
+    lesson: 'The conversion is a prompt problem. The deployment is not.',
+    patternsUsed: ['systematic-iteration'],
+    heuristicsProduced: [
+      'Single prompt when deterministic + all context in input',
+      'Compound workflow when success depends on external context',
+      'Novel pattern when 10+ uses justify infrastructure',
+      'Don\'t use prompts for running commands — not a prompt problem'
     ],
-    keyLearning: 'The conversion is a prompt problem. The deployment is not.'
+    module: 4
+  },
+  {
+    id: 'memento-classifier',
+    problem: 'Memento Tab Classifier (26% → 100%)',
+    status: 'completed',
+    date: '2025-12-24',
+    reason: 'Tab capture incomplete — needed structured output to force exhaustive enumeration',
+    lesson: 'Structural constraints beat verbal emphasis. Make output format require explicit enumeration.',
+    patternsUsed: ['systematic-iteration', 'selective-deep-dive'],
+    module: 2
   }
+];
+
+const patterns = [
+  {
+    id: 'selective-deep-dive',
+    name: 'Selective Deep Dive Pattern',
+    type: 'prompt',
+    status: 'stable',
+    description: 'Two-pass: classify + triage → conditional deep analysis with hints',
+    kbPath: 'patterns/prompt-patterns/Selective Deep Dive Pattern.md',
+    problemSignature: [
+      'You have a collection of N items to process',
+      'Some items can be handled with cheap signals (metadata, title)',
+      'Others require expensive deep analysis (full content, multi-step)',
+      'You don\'t know which items need deep analysis until you inspect them',
+      'Token budget makes processing everything deeply impractical'
+    ],
+    templateSummary: 'Pass 1: Classify items, flag those needing depth, generate extraction hints. Pass 2: Deep analysis only for flagged items using self-generated hints.',
+    gotchas: [
+      'Hint quality determines Pass 2 value — vague hints produce vague extraction',
+      'Pass 1 must be conservative — better to flag too many than miss important items',
+      'If >50% of items get flagged, you\'ve lost the efficiency benefit',
+      'Model capability floor — Pass 1 model must be smart enough to generate useful hints'
+    ],
+    antiPatterns: [
+      'All items need the same depth of analysis → just process them all',
+      'Cheap signals are unreliable → triage will misclassify',
+      'Deep analysis is cheap → no benefit from selectivity',
+      'Single item processing → pattern assumes collection'
+    ],
+    relatedPatterns: ['systematic-iteration', 'adversarial-review'],
+    example: 'Memento browser session classifier'
+  },
+  {
+    id: 'systematic-iteration',
+    name: 'Systematic Prompt Iteration Protocol',
+    type: 'prompt',
+    status: 'stable',
+    meta: true,
+    description: 'Baseline → Hypothesis → Minimal Variant → Test → Compare',
+    kbPath: 'patterns/prompt-patterns/Systematic Prompt Iteration Protocol.md',
+    problemSignature: [
+      'A prompt works inconsistently and you\'re not sure why',
+      'You\'ve been tweaking prompts based on intuition rather than data',
+      'Multiple models exhibit similar failure modes (suggests prompt issue)',
+      'You need to distinguish signal from noise in prompt experiments',
+      'You want compounding improvement rather than random walks'
+    ],
+    templateSummary: 'Phase 1: Define metrics, run 3+ times, record baseline. Phase 2: Identify ONE failure mode, form hypothesis, design minimal variant. Phase 3: Test variant 3+ times, compare. Phase 4: Variant becomes new baseline or document what didn\'t work.',
+    coreInsight: 'Structural constraints beat verbal emphasis. If you want behavior X, don\'t tell the model "please do X" — design an output format where not doing X would be syntactically incomplete.',
+    gotchas: [
+      'Don\'t change multiple things at once — you won\'t know what worked',
+      'Compare runs on similar inputs — same conditions matter',
+      'Negative results are data — document what didn\'t work',
+      'Verbal emphasis can backfire — "CRITICAL" may degrade performance',
+      '3 runs minimum — single runs don\'t show consistency'
+    ],
+    antiPatterns: [
+      'Exploring a new domain and don\'t yet know what success looks like',
+      'The prompt is working fine (don\'t fix what isn\'t broken)',
+      'You can\'t define measurable success criteria',
+      'Creative/open-ended tasks where "success" is subjective'
+    ],
+    relatedPatterns: ['selective-deep-dive', 'adversarial-review'],
+    example: 'Memento Tab Classifier: 26% → 100% via structural constraint'
+  },
+  {
+    id: 'adversarial-review',
+    name: 'Multi-Agent Adversarial Review Pattern',
+    type: 'prompt',
+    status: 'stable',
+    description: 'Challenger role → issue/evidence/severity/fix format → disposition table',
+    kbPath: 'patterns/prompt-patterns/Multi-Agent Adversarial Review Pattern.md',
+    problemSignature: [
+      'You have an artifact (code, proposal, document) that needs validation',
+      'The artifact was produced by one agent and may contain blind spots',
+      'Requirements exist against which the artifact should be evaluated',
+      'You want structured critique rather than vague feedback',
+      'The evaluating agent may have capabilities the producer lacks',
+      'You need actionable dispositions (accept/reject/modify) not just commentary'
+    ],
+    templateSummary: 'Challenger reads requirements + artifact, issues structured critique with evidence/severity/fix. Producer responds with disposition table: ACCEPT, MODIFY, REJECT, or DEFER for each issue.',
+    gotchas: [
+      'Requirements must exist — challenger cannot critique against nothing',
+      'Artifact must be accessible — if challenger can\'t read it, critique is superficial',
+      'Severity calibration — without definitions, everything becomes "significant"',
+      'Disposition discipline — producer must respond to each issue, not cherry-pick',
+      'Capability claims must be true — don\'t claim "you can see the rendering" if agent can\'t'
+    ],
+    antiPatterns: [
+      'Artifact is trivial → overhead exceeds value',
+      'No requirements exist → write requirements first',
+      'Producer and challenger are same agent in same context',
+      'Time pressure is extreme → adds latency for multi-turn exchange',
+      'Critique isn\'t actionable → if producer can\'t modify artifact, why challenge it?'
+    ],
+    relatedPatterns: ['cross-examination', 'skill-forge'],
+    example: 'JSX Demo artifact inspection under Lanesborough Protocol'
+  },
+  {
+    id: 'cross-examination',
+    name: 'Structured Cross-Examination Pattern',
+    type: 'prompt',
+    status: 'stable',
+    description: 'Multi-persona questioning with one-question pacing and evidence requirements',
+    kbPath: 'patterns/prompt-patterns/Structured Cross-Examination Pattern.md',
+    problemSignature: [
+      'You have a claim, proposal, or idea that needs stress-testing BEFORE artifact exists',
+      'The claim may contain hidden assumptions, edge cases, or failure modes',
+      'Multiple perspectives or expertise domains are relevant',
+      'You want structured questioning rather than open-ended brainstorming',
+      'You need to surface uncertainty explicitly rather than paper over it',
+      'An optional certainty threshold would help prevent premature conclusions'
+    ],
+    templateSummary: 'Assign personas (Moderator, Advocate, Skeptic, Specialist). Moderator asks one question at a time. Claims must cite evidence. No proceeding until prior question resolved. Loop until questions resolved or uncertainty explicitly acknowledged.',
+    gotchas: [
+      'Certainty threshold is a heuristic, not a guarantee',
+      'Persona quality matters — vague descriptions produce generic challenges',
+      'One-question pacing requires discipline — models tend to bundle',
+      'Evidence rule only as good as available artifacts',
+      'Cross-examination can deadlock — escalate to human rather than force closure',
+      'Role contamination — same model playing multiple personas may produce false consensus'
+    ],
+    antiPatterns: [
+      'Claim is trivial or uncontroversial → overhead exceeds value',
+      'Artifact already exists → use Adversarial Review instead',
+      'No adversarial tension needed → simple review suffices',
+      'You want a decision → pattern surfaces uncertainty, does not resolve it'
+    ],
+    relatedPatterns: ['adversarial-review', 'selective-deep-dive'],
+    example: 'Grok Write Access Proposal evaluation (CIO/VP/Developer roles)'
+  },
+  {
+    id: 'skill-forge',
+    name: 'Skill Forge Pattern',
+    type: 'workflow',
+    status: 'draft',
+    description: 'Heterogeneous deliberation → human articulation → reusable skill',
+    kbPath: 'patterns/Skill Forge Pattern.md',
+    problemSignature: [
+      'You face a novel problem requiring judgment beyond routine application',
+      'The problem domain is technically complex — single model may have blindspots',
+      'You need the human decision-maker to be genuinely qualified, not rubber-stamping',
+      'The class of problem is likely to recur, making upfront deliberation cost worthwhile',
+      'You want to accumulate executive capacity over time, not just make isolated decisions'
+    ],
+    templateSummary: 'Novel problem triggers full deliberation: Model A proposes, Model B paraphrases with verification flags, understanding gate closes, substantive critique, agreement gate. Human articulates outcome in own words (success test). Articulation compiled into reusable skill.',
+    coreInsight: 'Goal is qualified human judgment, not AI consensus. Paraphrase is adversarial verification, not passive restatement. If human cannot articulate core in own words, protocol failed.',
+    gotchas: [
+      'Using for trivial decisions → overhead exceeds value; invoke existing skills instead',
+      'Skipping human articulation → produces AI consensus, not qualified judgment',
+      'Homogeneous models → shared blindspots defeat the purpose',
+      'Not capturing the skill → deliberation cost is wasted if not amortized',
+      'Routing around failures → skill failures must return to forge, not be patched ad-hoc'
+    ],
+    antiPatterns: [
+      'Trivial decisions where existing skills apply',
+      'Skipping human articulation step',
+      'Using models with same training/priors (no swiss cheese coverage)'
+    ],
+    relatedPatterns: ['adversarial-review', 'cross-examination'],
+    example: 'Stevens Essay (rejected — problem class doesn\'t recur)'
+  },
+  {
+    id: 'canonical-overlays',
+    name: 'Canonical Base with Overlays Pattern',
+    type: 'architectural',
+    status: 'stable',
+    description: 'Single source of truth → lightweight overlays that link back',
+    kbPath: 'patterns/Canonical Base with Overlays Pattern.md',
+    problemSignature: [
+      'You need variations of something without risking drift',
+      'Multiple audiences or contexts require adapted versions',
+      'Feedback should flow to one source of truth',
+      'Maintenance is multiplying with each variant'
+    ],
+    templateSummary: 'Base document defines structure, styling, constraints. Overlays link back to base, add audience framing. Changes flow down from base. Deviations documented with rationale. Don\'t duplicate — link.',
+    gotchas: [
+      'Don\'t duplicate content — if copying from base to overlay, you\'re doing it wrong',
+      'Feedback updates the base first, not individual overlays',
+      'Deviations require explicit rationale to make drift auditable'
+    ],
+    antiPatterns: [
+      'Genuinely different artifacts that happen to look similar',
+      'One-off documents with no expected variants',
+      'Base would be so abstract it provides no real constraint'
+    ],
+    relatedPatterns: [],
+    example: 'Demo thin skill with Tim/Sean/system-docs overlays'
+  }
+];
+
+// Pattern health metrics for Module 5 audit (separate concern)
+const patternHealthMetrics = {
+  'selective-deep-dive': { lastUsed: '2025-12-28', monthlyUsesActual: 4, monthlyUsesExpected: 5, cognitiveLoad: 'medium', maintenanceBurden: 2 },
+  'systematic-iteration': { lastUsed: '2025-12-24', monthlyUsesActual: 6, monthlyUsesExpected: 8, cognitiveLoad: 'medium', maintenanceBurden: 3 },
+  'adversarial-review': { lastUsed: '2025-12-20', monthlyUsesActual: 2, monthlyUsesExpected: 4, cognitiveLoad: 'high', maintenanceBurden: 4 },
+  'cross-examination': { lastUsed: '2025-12-16', monthlyUsesActual: 1, monthlyUsesExpected: 3, cognitiveLoad: 'high', maintenanceBurden: 5 },
+  'skill-forge': { lastUsed: '2025-12-28', monthlyUsesActual: 0, monthlyUsesExpected: 2, cognitiveLoad: 'high', maintenanceBurden: 6 },
+  'canonical-overlays': { lastUsed: '2025-12-14', monthlyUsesActual: 3, monthlyUsesExpected: 3, cognitiveLoad: 'low', maintenanceBurden: 2 }
 };
 
-// Color tokens
+const modules = [
+  { id: 1, name: 'Your Prompt Pattern Library', status: 'completed' },
+  { id: 2, name: 'Systematic Prompt Refinement Through Controlled Iteration', status: 'completed' },
+  { id: 3, name: 'Pattern Orchestration: Composing Multi-Step Workflows', status: 'completed' },
+  { id: 4, name: 'Pattern Selection: Single vs. Compound Workflows', status: 'completed' },
+  { id: 5, name: 'Pattern Library Health: When to Refactor, Retire, or Rebuild', status: 'active' },
+];
+
+const evidenceLog = [
+  { date: '2025-12-24', work: 'Systematic Prompt Iteration Protocol documented', module: 2, decisionId: 'memento-classifier' },
+  { date: '2025-12-24', work: 'Memento classifier: 26% → 100% via structural constraint', module: 2, decisionId: 'memento-classifier' },
+  { date: '2025-12-24', work: 'Selective Deep Dive Pattern documented', module: 3 },
+  { date: '2025-12-25', work: 'Module 3 Progress Check completed', module: 3 },
+  { date: '2025-12-28', work: 'Three-Approach Test completed (JSX → HTML)', module: 4, decisionId: 'jsx-gitpages' },
+  { date: '2025-12-28', work: 'Decision Framework: 4 heuristics documented', module: 4, decisionId: 'jsx-gitpages' },
+  { date: '2025-12-28', work: 'Module 4 Progress Check taken', module: 4 },
+];
+
+const problemFirstNav = [
+  { problem: 'I have many items and some need more analysis than others', patternId: 'selective-deep-dive', decisionId: 'memento-classifier' },
+  { problem: 'My prompt works inconsistently and I don\'t know why', patternId: 'systematic-iteration', decisionId: 'memento-classifier' },
+  { problem: 'I need to validate an artifact against requirements', patternId: 'adversarial-review', decisionId: null },
+  { problem: 'I need to stress-test an idea before building anything', patternId: 'cross-examination', decisionId: null },
+  { problem: 'I have a novel problem requiring qualified human judgment', patternId: 'skill-forge', decisionId: 'skill-forge-stevens' },
+  { problem: 'I need variations without drift or maintenance multiplication', patternId: 'canonical-overlays', decisionId: null }
+];
+
+// =============================================================================
+// COLORS
+// =============================================================================
 const colors = {
-  bg: '#0a0a0c',
-  surface: '#141418',
-  surfaceHover: '#1c1c22',
-  border: '#2a2a32',
-  borderLight: '#3a3a44',
-  text: '#e8e8ec',
-  textMuted: '#8888a0',
-  textDim: '#5a5a6a',
-  accent: '#60a5fa',
-  accentDim: '#2563eb',
-  success: '#4ade80',
-  successDim: '#166534',
-  warning: '#fbbf24',
-  warningDim: '#854d0e',
-  danger: '#f87171',
-  dangerDim: '#991b1b',
-  purple: '#a78bfa',
-  purpleDim: '#5b21b6',
+  bg: '#0a0a0c', surface: '#141418', surfaceHover: '#1c1c22',
+  border: '#2a2a32', borderLight: '#3a3a44',
+  text: '#e8e8ec', textMuted: '#8888a0', textDim: '#5a5a6a',
+  accent: '#60a5fa', accentDim: '#2563eb',
+  success: '#4ade80', successDim: '#166534',
+  warning: '#fbbf24', warningDim: '#854d0e',
+  danger: '#f87171', dangerDim: '#991b1b',
+  purple: '#a78bfa', purpleDim: '#5b21b6',
 };
 
-// Score ring component
-function ScoreRing({ score, target, size = 140 }) {
-  const stroke = 8;
-  const radius = (size - stroke) / 2;
-  const circumference = 2 * Math.PI * radius;
-  const progress = (score / 10) * circumference;
-  const targetProgress = (target / 10) * circumference;
+// =============================================================================
+// COMPONENTS
+// =============================================================================
 
-  return (
-    <div style={{ position: 'relative', width: size, height: size }}>
-      <svg width={size} height={size} style={{ transform: 'rotate(-90deg)' }}>
-        <circle cx={size/2} cy={size/2} r={radius} fill="none" stroke={colors.border} strokeWidth={stroke} />
-        <circle cx={size/2} cy={size/2} r={radius} fill="none" stroke={colors.borderLight} strokeWidth={stroke}
-          strokeDasharray={circumference} strokeDashoffset={circumference - targetProgress} strokeLinecap="round" opacity={0.4} />
-        <circle cx={size/2} cy={size/2} r={radius} fill="none" stroke={colors.accent} strokeWidth={stroke}
-          strokeDasharray={circumference} strokeDashoffset={circumference - progress} strokeLinecap="round"
-          style={{ transition: 'stroke-dashoffset 0.8s ease-out' }} />
-      </svg>
-      <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
-        <span style={{ fontSize: 32, fontWeight: 700, color: colors.text, fontFamily: 'JetBrains Mono, monospace' }}>{score.toFixed(1)}</span>
-        <span style={{ fontSize: 12, color: colors.textMuted }}>/ {target}</span>
-      </div>
-    </div>
-  );
-}
-
-// Module bar
-function ModuleBar({ modules }) {
-  const getColor = (status) => ({ completed: colors.success, active: colors.accent, locked: colors.textDim }[status]);
-  return (
-    <div style={{ display: 'flex', gap: 4, marginBottom: 8 }}>
-      {modules.map((m, i) => (
-        <div key={i} style={{ flex: 1, height: 6, borderRadius: 3, background: m.status === 'locked' ? colors.border : getColor(m.status), opacity: m.status === 'locked' ? 0.4 : 1 }} />
-      ))}
-    </div>
-  );
-}
-
-// Status badge
 function Badge({ status, children }) {
   const styles = {
     completed: { bg: colors.successDim, color: colors.success },
     active: { bg: colors.accentDim, color: colors.accent },
-    locked: { bg: colors.border, color: colors.textDim },
-    pending: { bg: colors.border, color: colors.textMuted },
     stable: { bg: colors.successDim, color: colors.success },
-    review: { bg: colors.warningDim, color: colors.warning },
-    experimental: { bg: colors.purpleDim, color: colors.purple },
-    new: { bg: colors.accentDim, color: colors.accent },
+    draft: { bg: colors.warningDim, color: colors.warning },
+    abandoned: { bg: colors.warningDim, color: colors.warning },
+    rejected: { bg: colors.dangerDim, color: colors.danger },
+    pending: { bg: colors.border, color: colors.textMuted },
     low: { bg: colors.successDim, color: colors.success },
     medium: { bg: colors.warningDim, color: colors.warning },
     high: { bg: colors.dangerDim, color: colors.danger },
+    prompt: { bg: colors.accentDim, color: colors.accent },
+    workflow: { bg: colors.successDim, color: colors.success },
+    architectural: { bg: colors.purpleDim, color: colors.purple },
   };
   const s = styles[status] || styles.pending;
   return (
-    <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4, padding: '3px 8px', borderRadius: 4, fontSize: 11, fontWeight: 600,
-      background: s.bg, color: s.color, textTransform: 'uppercase', letterSpacing: '0.02em' }}>
-      {status === 'completed' && '✓ '}{status === 'active' && '● '}{status === 'locked' && '🔒 '}{children || status}
+    <span style={{ display: 'inline-flex', alignItems: 'center', padding: '3px 8px', borderRadius: 4, fontSize: 11, fontWeight: 600, background: s.bg, color: s.color, textTransform: 'uppercase', letterSpacing: '0.02em' }}>
+      {children || status}
     </span>
   );
 }
 
-// Card component
 function Card({ title, children, style }) {
   return (
     <div style={{ background: colors.surface, border: `1px solid ${colors.border}`, borderRadius: 8, padding: 20, ...style }}>
@@ -294,10 +351,9 @@ function Card({ title, children, style }) {
   );
 }
 
-// Tab component
 function Tabs({ tabs, active, onChange }) {
   return (
-    <div style={{ display: 'flex', gap: 2, marginBottom: 20, borderBottom: `1px solid ${colors.border}`, paddingBottom: 1 }}>
+    <div style={{ display: 'flex', gap: 2, marginBottom: 20, borderBottom: `1px solid ${colors.border}`, paddingBottom: 1, flexWrap: 'wrap' }}>
       {tabs.map(t => (
         <button key={t.id} onClick={() => onChange(t.id)} style={{
           background: active === t.id ? colors.surfaceHover : 'transparent',
@@ -312,95 +368,295 @@ function Tabs({ tabs, active, onChange }) {
   );
 }
 
-// Pattern Card component
-function PatternCard({ pattern }) {
-  const typeColors = { prompt: colors.accent, architectural: colors.purple, workflow: colors.success };
-  const usageMismatch = pattern.monthlyUsesActual < pattern.monthlyUsesExpected / 2;
-
+function ScoreRing({ score, target, size = 120 }) {
+  const stroke = 8, radius = (size - stroke) / 2, circumference = 2 * Math.PI * radius;
+  const progress = (score / 10) * circumference, targetProgress = (target / 10) * circumference;
   return (
-    <div style={{
-      padding: 16, background: colors.surfaceHover, borderRadius: 8,
-      borderLeft: `4px solid ${typeColors[pattern.type] || colors.accent}`,
-      display: 'flex', flexDirection: 'column', gap: 12
-    }}>
-      <div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
-          <span style={{ fontSize: 14, fontWeight: 600, color: colors.text }}>{pattern.name}</span>
-          {pattern.meta && <span style={{ fontSize: 10, padding: '2px 6px', background: colors.warningDim, color: colors.warning, borderRadius: 3 }}>META</span>}
-        </div>
-        <p style={{ margin: 0, fontSize: 12, color: colors.textMuted }}>{pattern.description}</p>
-      </div>
-
-      <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-        <Badge status={pattern.status}>{pattern.status}</Badge>
-        <Badge status={pattern.cognitiveLoad}>{pattern.cognitiveLoad} load</Badge>
-      </div>
-
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 8, fontSize: 11 }}>
-        <div>
-          <div style={{ color: colors.textDim }}>Last used</div>
-          <div style={{ color: colors.text, fontFamily: 'JetBrains Mono, monospace' }}>{pattern.lastUsed}</div>
-        </div>
-        <div>
-          <div style={{ color: colors.textDim }}>Uses/mo</div>
-          <div style={{ color: usageMismatch ? colors.warning : colors.text }}>
-            {pattern.monthlyUsesActual}/{pattern.monthlyUsesExpected}
-            {usageMismatch && ' ⚠'}
-          </div>
-        </div>
-        <div>
-          <div style={{ color: colors.textDim }}>Burden</div>
-          <div style={{ color: pattern.maintenanceBurden > 4 ? colors.warning : colors.text }}>{pattern.maintenanceBurden}</div>
-        </div>
-      </div>
-
-      <div style={{ fontSize: 11, color: colors.textDim, fontFamily: 'JetBrains Mono, monospace' }}>
-        {pattern.location}
+    <div style={{ position: 'relative', width: size, height: size }}>
+      <svg width={size} height={size} style={{ transform: 'rotate(-90deg)' }}>
+        <circle cx={size/2} cy={size/2} r={radius} fill="none" stroke={colors.border} strokeWidth={stroke} />
+        <circle cx={size/2} cy={size/2} r={radius} fill="none" stroke={colors.borderLight} strokeWidth={stroke} strokeDasharray={circumference} strokeDashoffset={circumference - targetProgress} strokeLinecap="round" opacity={0.4} />
+        <circle cx={size/2} cy={size/2} r={radius} fill="none" stroke={colors.accent} strokeWidth={stroke} strokeDasharray={circumference} strokeDashoffset={circumference - progress} strokeLinecap="round" />
+      </svg>
+      <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+        <span style={{ fontSize: 28, fontWeight: 700, color: colors.text, fontFamily: 'JetBrains Mono' }}>{score.toFixed(1)}</span>
+        <span style={{ fontSize: 11, color: colors.textMuted }}>/ {target}</span>
       </div>
     </div>
   );
 }
 
-// Resume with Claude component
+// Decision Card with links to patterns
+function DecisionCard({ decision, onPatternClick }) {
+  const statusColor = { completed: colors.success, abandoned: colors.warning, rejected: colors.danger }[decision.status];
+  const patternsInvolved = [...(decision.patternsConsidered || []), ...(decision.patternsUsed || [])];
+
+  return (
+    <div style={{ padding: 16, background: colors.surfaceHover, border: `1px solid ${colors.border}`, borderRadius: 8, borderLeft: `4px solid ${statusColor}`, marginBottom: 12 }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 8 }}>
+        <h4 style={{ margin: 0, fontSize: 15, fontWeight: 600, color: colors.text }}>{decision.problem}</h4>
+        <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+          <span style={{ fontSize: 11, color: colors.textDim, fontFamily: 'JetBrains Mono' }}>{decision.date}</span>
+          <Badge status={decision.status}>{decision.status}</Badge>
+        </div>
+      </div>
+      <p style={{ margin: '0 0 8px 0', fontSize: 13, color: colors.textMuted }}><strong style={{ color: colors.text }}>Reason:</strong> {decision.reason}</p>
+      <div style={{ padding: '8px 12px', background: colors.accentDim, borderRadius: 4, marginBottom: 8 }}>
+        <span style={{ fontSize: 12, color: colors.accent, fontStyle: 'italic' }}>Lesson: {decision.lesson}</span>
+      </div>
+      {patternsInvolved.length > 0 && (
+        <div style={{ display: 'flex', gap: 8, alignItems: 'center', flexWrap: 'wrap' }}>
+          <span style={{ fontSize: 11, color: colors.textDim }}>Patterns:</span>
+          {patternsInvolved.map(pId => {
+            const p = patterns.find(x => x.id === pId);
+            return p ? (
+              <button key={pId} onClick={() => onPatternClick(pId)} style={{ background: colors.border, border: 'none', padding: '4px 8px', borderRadius: 4, fontSize: 11, color: colors.accent, cursor: 'pointer' }}>
+                → {p.name}
+              </button>
+            ) : null;
+          })}
+        </div>
+      )}
+      {decision.heuristicsProduced && (
+        <div style={{ marginTop: 12, paddingTop: 12, borderTop: `1px solid ${colors.border}` }}>
+          <span style={{ fontSize: 11, color: colors.textDim, display: 'block', marginBottom: 8 }}>Produced heuristics:</span>
+          {decision.heuristicsProduced.map((h, i) => (
+            <div key={i} style={{ display: 'flex', gap: 8, alignItems: 'flex-start', marginBottom: 4 }}>
+              <span style={{ width: 18, height: 18, borderRadius: '50%', background: colors.accentDim, color: colors.accent, fontSize: 10, fontWeight: 600, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>{i+1}</span>
+              <span style={{ fontSize: 12, color: colors.text }}>{h}</span>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+// Expandable Pattern Card
+function PatternCard({ pattern, expanded, onToggle, onDecisionClick }) {
+  const typeColors = { prompt: colors.accent, workflow: colors.success, architectural: colors.purple };
+  const decisionsUsingThis = decisions.filter(d => (d.patternsUsed || []).includes(pattern.id) || (d.patternsConsidered || []).includes(pattern.id));
+
+  return (
+    <div id={`pattern-${pattern.id}`} style={{ background: colors.surfaceHover, border: `1px solid ${colors.border}`, borderRadius: 8, borderLeft: `4px solid ${typeColors[pattern.type]}`, marginBottom: 16 }}>
+      {/* Collapsed View */}
+      <div style={{ padding: 16 }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 8 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            <span style={{ fontSize: 15, fontWeight: 600, color: colors.text }}>{pattern.name}</span>
+            {pattern.meta && <span style={{ fontSize: 10, padding: '2px 6px', background: colors.warningDim, color: colors.warning, borderRadius: 3 }}>META</span>}
+          </div>
+          <div style={{ display: 'flex', gap: 8 }}>
+            <Badge status={pattern.type}>{pattern.type}</Badge>
+            <Badge status={pattern.status}>{pattern.status}</Badge>
+          </div>
+        </div>
+        <p style={{ margin: '0 0 12px 0', fontSize: 13, color: colors.textMuted }}>{pattern.description}</p>
+
+        {/* Problem Signature - Always Visible */}
+        <div style={{ marginBottom: 12 }}>
+          <span style={{ fontSize: 11, color: colors.textDim, display: 'block', marginBottom: 6 }}>Problem Signature:</span>
+          <ul style={{ margin: 0, paddingLeft: 16, fontSize: 13, color: colors.text }}>
+            {pattern.problemSignature.slice(0, expanded ? undefined : 3).map((sig, i) => (
+              <li key={i} style={{ marginBottom: 4 }}>{sig}</li>
+            ))}
+            {!expanded && pattern.problemSignature.length > 3 && (
+              <li style={{ color: colors.textDim, fontStyle: 'italic' }}>...and {pattern.problemSignature.length - 3} more</li>
+            )}
+          </ul>
+        </div>
+
+        {/* Decision History Link */}
+        {decisionsUsingThis.length > 0 && (
+          <div style={{ display: 'flex', gap: 8, alignItems: 'center', marginBottom: 12, flexWrap: 'wrap' }}>
+            <span style={{ fontSize: 11, color: colors.textDim }}>Used in:</span>
+            {decisionsUsingThis.map(d => (
+              <button key={d.id} onClick={() => onDecisionClick(d.id)} style={{ background: colors.border, border: 'none', padding: '4px 8px', borderRadius: 4, fontSize: 11, color: colors.accent, cursor: 'pointer' }}>
+                {d.problem.slice(0, 30)}{d.problem.length > 30 ? '...' : ''} ({d.status})
+              </button>
+            ))}
+          </div>
+        )}
+
+        <button onClick={onToggle} style={{ background: colors.border, border: 'none', padding: '6px 12px', borderRadius: 4, fontSize: 12, color: colors.text, cursor: 'pointer' }}>
+          {expanded ? '▲ Collapse' : '▼ Expand Details'}
+        </button>
+      </div>
+
+      {/* Expanded View */}
+      {expanded && (
+        <div style={{ padding: '0 16px 16px 16px', borderTop: `1px solid ${colors.border}` }}>
+          {/* Template Summary */}
+          <div style={{ marginTop: 16, marginBottom: 16 }}>
+            <span style={{ fontSize: 11, color: colors.textDim, display: 'block', marginBottom: 6 }}>Template Summary:</span>
+            <p style={{ margin: 0, fontSize: 13, color: colors.text, padding: 12, background: colors.surface, borderRadius: 6 }}>{pattern.templateSummary}</p>
+          </div>
+
+          {/* Core Insight if present */}
+          {pattern.coreInsight && (
+            <div style={{ marginBottom: 16, padding: 12, background: colors.accentDim, borderRadius: 6, borderLeft: `3px solid ${colors.accent}` }}>
+              <span style={{ fontSize: 11, color: colors.textDim, display: 'block', marginBottom: 4 }}>Core Insight:</span>
+              <p style={{ margin: 0, fontSize: 13, color: colors.text }}>{pattern.coreInsight}</p>
+            </div>
+          )}
+
+          {/* Gotchas */}
+          <div style={{ marginBottom: 16 }}>
+            <span style={{ fontSize: 11, color: colors.textDim, display: 'block', marginBottom: 6 }}>⚠️ Gotchas:</span>
+            <ul style={{ margin: 0, paddingLeft: 16, fontSize: 12, color: colors.warning }}>
+              {pattern.gotchas.map((g, i) => <li key={i} style={{ marginBottom: 4 }}>{g}</li>)}
+            </ul>
+          </div>
+
+          {/* Anti-Patterns */}
+          <div style={{ marginBottom: 16 }}>
+            <span style={{ fontSize: 11, color: colors.textDim, display: 'block', marginBottom: 6 }}>✗ When NOT to Use:</span>
+            <ul style={{ margin: 0, paddingLeft: 16, fontSize: 12, color: colors.danger }}>
+              {pattern.antiPatterns.map((a, i) => <li key={i} style={{ marginBottom: 4 }}>{a}</li>)}
+            </ul>
+          </div>
+
+          {/* Related Patterns */}
+          {pattern.relatedPatterns.length > 0 && (
+            <div style={{ marginBottom: 16 }}>
+              <span style={{ fontSize: 11, color: colors.textDim, display: 'block', marginBottom: 6 }}>Related Patterns:</span>
+              <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+                {pattern.relatedPatterns.map(rpId => {
+                  const rp = patterns.find(x => x.id === rpId);
+                  return rp ? (
+                    <a key={rpId} href={`#pattern-${rpId}`} style={{ background: colors.border, padding: '4px 8px', borderRadius: 4, fontSize: 11, color: colors.accent, textDecoration: 'none' }}>
+                      → {rp.name}
+                    </a>
+                  ) : null;
+                })}
+              </div>
+            </div>
+          )}
+
+          {/* Example */}
+          {pattern.example && (
+            <div style={{ marginBottom: 16 }}>
+              <span style={{ fontSize: 11, color: colors.textDim, display: 'block', marginBottom: 6 }}>Example:</span>
+              <p style={{ margin: 0, fontSize: 13, color: colors.text }}>{pattern.example}</p>
+            </div>
+          )}
+
+          {/* KB Path */}
+          <div style={{ fontSize: 11, color: colors.textDim, fontFamily: 'JetBrains Mono' }}>
+            KB: {pattern.kbPath}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// Problem-First Navigator
+function ProblemFirstNav({ items, onPatternClick, onDecisionClick }) {
+  const [expanded, setExpanded] = useState({});
+
+  return (
+    <Card title="What's Your Situation?" style={{ marginBottom: 20 }}>
+      <p style={{ margin: '0 0 16px 0', fontSize: 13, color: colors.textMuted }}>
+        Match your problem to a pattern. Each entry shows where the pattern was used (or why it was rejected).
+      </p>
+      {items.map((item, i) => {
+        const pattern = patterns.find(p => p.id === item.patternId);
+        const decision = item.decisionId ? decisions.find(d => d.id === item.decisionId) : null;
+        const isExpanded = expanded[i];
+
+        return (
+          <div key={i} style={{ marginBottom: 8 }}>
+            <button onClick={() => setExpanded({...expanded, [i]: !isExpanded})} style={{ width: '100%', textAlign: 'left', background: colors.surface, border: `1px solid ${colors.border}`, borderRadius: 6, padding: 12, cursor: 'pointer' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                <span style={{ color: colors.accent }}>{isExpanded ? '▼' : '▸'}</span>
+                <span style={{ fontSize: 14, color: colors.text }}>{item.problem}</span>
+              </div>
+            </button>
+            {isExpanded && (
+              <div style={{ marginLeft: 24, marginTop: 8, padding: 12, background: colors.surfaceHover, borderRadius: 6 }}>
+                <div style={{ marginBottom: 8 }}>
+                  <span style={{ fontSize: 12, color: colors.textDim }}>Pattern: </span>
+                  <button onClick={() => onPatternClick(item.patternId)} style={{ background: 'none', border: 'none', color: colors.accent, fontSize: 13, cursor: 'pointer', textDecoration: 'underline' }}>
+                    {pattern?.name}
+                  </button>
+                </div>
+                <div>
+                  <span style={{ fontSize: 12, color: colors.textDim }}>Decision: </span>
+                  {decision ? (
+                    <button onClick={() => onDecisionClick(item.decisionId)} style={{ background: 'none', border: 'none', color: colors.accent, fontSize: 13, cursor: 'pointer', textDecoration: 'underline' }}>
+                      {decision.problem} ({decision.status})
+                    </button>
+                  ) : (
+                    <span style={{ fontSize: 12, color: colors.textMuted, fontStyle: 'italic' }}>No decision history yet</span>
+                  )}
+                </div>
+              </div>
+            )}
+          </div>
+        );
+      })}
+    </Card>
+  );
+}
+
+// Resume with Claude
 function ResumeWithClaude() {
   return (
-    <div style={{
-      marginTop: 24, padding: 20, background: colors.surface, border: `1px solid ${colors.accentDim}`,
-      borderRadius: 8, display: 'flex', alignItems: 'center', gap: 16
-    }}>
+    <div style={{ marginTop: 24, padding: 20, background: colors.surface, border: `1px solid ${colors.accentDim}`, borderRadius: 8, display: 'flex', alignItems: 'center', gap: 16 }}>
       <div style={{ fontSize: 32 }}>💬</div>
       <div style={{ flex: 1 }}>
         <h4 style={{ margin: '0 0 4px 0', fontSize: 14, fontWeight: 600, color: colors.text }}>Resume with Claude</h4>
         <p style={{ margin: 0, fontSize: 13, color: colors.textMuted }}>
-          Say <code style={{ background: colors.bg, padding: '2px 8px', borderRadius: 4, color: colors.accent, fontFamily: 'JetBrains Mono, monospace' }}>aicred</code> in Claude Code to load full context from the Session Briefing and continue where you left off.
+          Say <code style={{ background: colors.bg, padding: '2px 8px', borderRadius: 4, color: colors.accent, fontFamily: 'JetBrains Mono' }}>aicred</code> in Claude Code to load full context and continue.
         </p>
       </div>
       <div style={{ textAlign: 'right', fontSize: 11, color: colors.textDim }}>
         <div>Session Briefing</div>
-        <div style={{ fontFamily: 'JetBrains Mono, monospace' }}>projects/aicred/</div>
+        <div style={{ fontFamily: 'JetBrains Mono' }}>projects/aicred/</div>
       </div>
     </div>
   );
 }
 
-// Main dashboard
+// =============================================================================
+// MAIN DASHBOARD
+// =============================================================================
 function AICREDDashboard() {
   const [activeTab, setActiveTab] = useState('overview');
+  const [expandedPatterns, setExpandedPatterns] = useState({});
+
   const tabs = [
     { id: 'overview', label: 'Overview' },
-    { id: 'exercise', label: 'Current Exercise' },
+    { id: 'history', label: 'Problem History' },
     { id: 'patterns', label: 'Pattern Library' },
+    { id: 'audit', label: 'Pattern Audit' },
     { id: 'evidence', label: 'Evidence Log' },
   ];
 
-  const activeModule = data.modules.find(m => m.status === 'active');
+  const handlePatternClick = (patternId) => {
+    setActiveTab('patterns');
+    setExpandedPatterns({ [patternId]: true });
+    setTimeout(() => {
+      document.getElementById(`pattern-${patternId}`)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 100);
+  };
+
+  const handleDecisionClick = (decisionId) => {
+    setActiveTab('history');
+    setTimeout(() => {
+      document.getElementById(`decision-${decisionId}`)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 100);
+  };
+
+  const activeModule = modules.find(m => m.status === 'active');
 
   return (
     <div style={{ minHeight: '100vh', background: colors.bg, color: colors.text, fontFamily: '"Source Sans 3", -apple-system, sans-serif', padding: 24 }}>
       {/* Header */}
       <header style={{ marginBottom: 32 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 8 }}>
-          <h1 style={{ margin: 0, fontSize: 24, fontWeight: 700, letterSpacing: '-0.02em' }}>AI CRED</h1>
+          <h1 style={{ margin: 0, fontSize: 24, fontWeight: 700 }}>AI CRED</h1>
           <Badge status="active">Module {activeModule?.id}</Badge>
         </div>
         <p style={{ margin: 0, color: colors.textMuted, fontSize: 14 }}>{activeModule?.name}</p>
@@ -408,171 +664,176 @@ function AICREDDashboard() {
 
       <Tabs tabs={tabs} active={activeTab} onChange={setActiveTab} />
 
+      {/* OVERVIEW TAB */}
       {activeTab === 'overview' && (
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 20 }}>
-          {/* Score Card */}
           <Card title="Progress">
             <div style={{ display: 'flex', alignItems: 'center', gap: 24 }}>
-              <ScoreRing score={data.score} target={data.targetScore} />
+              <ScoreRing score={7.6} target={9.0} />
               <div>
-                <div style={{ fontSize: 13, color: colors.textMuted, marginBottom: 4 }}>Overall Progress</div>
-                <div style={{ fontSize: 28, fontWeight: 700, color: colors.text, marginBottom: 8 }}>{data.progress}%</div>
-                <ModuleBar modules={data.modules} />
-                <div style={{ fontSize: 12, color: colors.textDim }}>
-                  {data.modules.filter(m => m.status === 'completed').length} of {data.modules.length} modules
-                </div>
+                <div style={{ fontSize: 24, fontWeight: 700, marginBottom: 4 }}>70%</div>
+                <div style={{ fontSize: 12, color: colors.textDim }}>{modules.filter(m => m.status === 'completed').length} of {modules.length} modules</div>
               </div>
             </div>
           </Card>
 
-          {/* Module Status */}
           <Card title="Module Progress">
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-              {data.modules.map((m, i) => (
-                <div key={i} style={{
-                  display: 'flex', alignItems: 'center', gap: 12, padding: '8px 12px',
-                  background: m.status === 'active' ? colors.surfaceHover : 'transparent', borderRadius: 6,
-                  borderLeft: m.status === 'active' ? `3px solid ${colors.accent}` : '3px solid transparent'
-                }}>
-                  <span style={{
-                    width: 24, height: 24, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    fontSize: 12, fontWeight: 600,
-                    background: m.status === 'completed' ? colors.successDim : m.status === 'active' ? colors.accentDim : colors.border,
-                    color: m.status === 'completed' ? colors.success : m.status === 'active' ? colors.accent : colors.textDim
-                  }}>
-                    {m.status === 'completed' ? '✓' : m.id}
-                  </span>
-                  <span style={{ flex: 1, fontSize: 13, color: m.status === 'locked' ? colors.textDim : colors.text }}>{m.name}</span>
-                  <Badge status={m.status} />
-                </div>
-              ))}
-            </div>
+            {modules.map((m, i) => (
+              <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '8px 0', borderBottom: i < modules.length - 1 ? `1px solid ${colors.border}` : 'none' }}>
+                <span style={{ width: 20, height: 20, borderRadius: '50%', background: m.status === 'completed' ? colors.successDim : m.status === 'active' ? colors.accentDim : colors.border, color: m.status === 'completed' ? colors.success : m.status === 'active' ? colors.accent : colors.textDim, fontSize: 11, fontWeight: 600, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  {m.status === 'completed' ? '✓' : m.id}
+                </span>
+                <span style={{ flex: 1, fontSize: 12, color: m.status === 'active' ? colors.text : colors.textMuted }}>{m.name}</span>
+              </div>
+            ))}
           </Card>
 
-          {/* Decision Framework from Module 4 */}
-          <Card title="Module 4 Deliverable: Decision Framework" style={{ gridColumn: 'span 2' }}>
-            <div style={{ marginBottom: 16 }}>
-              {data.decisionFramework.heuristics.map((h, i) => (
-                <div key={i} style={{ display: 'flex', gap: 12, padding: '10px 0', borderBottom: i < 3 ? `1px solid ${colors.border}` : 'none' }}>
-                  <span style={{
-                    width: 24, height: 24, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    fontSize: 12, fontWeight: 600, background: colors.accentDim, color: colors.accent, flexShrink: 0
-                  }}>{h.id}</span>
-                  <span style={{ fontSize: 13, color: colors.text }}>{h.rule}</span>
-                </div>
-              ))}
-            </div>
-            <div style={{ padding: 12, background: colors.surfaceHover, borderRadius: 6, borderLeft: `3px solid ${colors.accent}` }}>
-              <span style={{ fontSize: 12, color: colors.textMuted }}>Key Learning: </span>
-              <span style={{ fontSize: 13, color: colors.text, fontWeight: 500 }}>{data.decisionFramework.keyLearning}</span>
-            </div>
+          <Card title="Latest Decision" style={{ gridColumn: 'span 2' }}>
+            <DecisionCard decision={decisions.find(d => d.id === 'jsx-gitpages')} onPatternClick={handlePatternClick} />
           </Card>
 
           <ResumeWithClaude />
         </div>
       )}
 
-      {activeTab === 'exercise' && (
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20 }}>
-          <Card title="Module 5 Exercise" style={{ gridColumn: 'span 2' }}>
-            <h4 style={{ margin: '0 0 8px 0', fontSize: 18, color: colors.text }}>{data.currentExercise.name}</h4>
-            <p style={{ margin: '0 0 16px 0', fontSize: 14, color: colors.textMuted }}>{data.currentExercise.focus}</p>
-            <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
-              <span style={{ fontSize: 12, color: colors.textDim }}>Estimated time:</span>
-              <span style={{ fontSize: 13, color: colors.text, fontWeight: 600 }}>{data.currentExercise.estimatedTime}</span>
-            </div>
+      {/* PROBLEM HISTORY TAB */}
+      {activeTab === 'history' && (
+        <div>
+          <Card title="Problem Selection Journey">
+            <p style={{ margin: '0 0 20px 0', fontSize: 13, color: colors.textMuted }}>
+              Module 4 required a problem that recurs, can be measured, and justifies different approaches. Finding the right problem is part of the exercise.
+            </p>
+            {decisions.filter(d => d.module === 4).map(d => (
+              <div key={d.id} id={`decision-${d.id}`}>
+                <DecisionCard decision={d} onPatternClick={handlePatternClick} />
+              </div>
+            ))}
           </Card>
 
-          <Card title="Three Health Dimensions">
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-              {data.currentExercise.healthDimensions.map((d, i) => (
-                <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: 12, background: colors.surfaceHover, borderRadius: 6 }}>
-                  <span style={{ fontSize: 24 }}>{d.icon}</span>
-                  <div>
-                    <div style={{ fontSize: 14, fontWeight: 600, color: colors.text }}>{d.name}</div>
-                    <div style={{ fontSize: 12, color: colors.textMuted }}>{d.desc}</div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </Card>
-
-          <Card title="Exercise Phases">
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-              {data.currentExercise.phases.map((p, i) => (
-                <div key={i} style={{ padding: '12px', background: colors.surfaceHover, borderRadius: 6, borderLeft: `3px solid ${p.status === 'completed' ? colors.success : p.status === 'active' ? colors.accent : colors.border}` }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 4 }}>
-                    <span style={{ fontSize: 13, fontWeight: 600, color: colors.text }}>Phase {p.id}: {p.name}</span>
-                    <span style={{ fontSize: 11, color: colors.textDim }}>{p.time}</span>
-                  </div>
-                  <p style={{ margin: 0, fontSize: 12, color: colors.textMuted }}>{p.description}</p>
-                </div>
-              ))}
-            </div>
-          </Card>
-
-          <Card title="Success Criteria" style={{ gridColumn: 'span 2' }}>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 12 }}>
-              {data.currentExercise.successCriteria.map((c, i) => (
-                <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: 8, padding: 12, background: colors.surfaceHover, borderRadius: 6 }}>
-                  <span style={{ color: colors.textDim, fontSize: 14 }}>☐</span>
-                  <span style={{ fontSize: 13, color: colors.text }}>{c}</span>
-                </div>
-              ))}
-            </div>
+          <Card title="Earlier Decisions" style={{ marginTop: 20 }}>
+            {decisions.filter(d => d.module !== 4).map(d => (
+              <div key={d.id} id={`decision-${d.id}`}>
+                <DecisionCard decision={d} onPatternClick={handlePatternClick} />
+              </div>
+            ))}
           </Card>
 
           <ResumeWithClaude />
         </div>
       )}
 
+      {/* PATTERN LIBRARY TAB */}
       {activeTab === 'patterns' && (
         <div>
-          <Card title="Pattern Library with Health Metrics" style={{ marginBottom: 20 }}>
-            <p style={{ margin: '0 0 20px 0', fontSize: 13, color: colors.textMuted }}>
-              Each pattern shows usage stats, cognitive load score, and maintenance burden for the Module 5 audit.
-              Patterns with ⚠ have usage mismatch (actual &lt; expected/2).
-            </p>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(340px, 1fr))', gap: 16 }}>
-              {data.patterns.map((p, i) => <PatternCard key={i} pattern={p} />)}
-            </div>
-          </Card>
+          <ProblemFirstNav items={problemFirstNav} onPatternClick={handlePatternClick} onDecisionClick={handleDecisionClick} />
 
-          <Card title="Pattern Status Legend">
-            <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}><Badge status="stable">stable</Badge><span style={{ fontSize: 12, color: colors.textMuted }}>Production ready</span></div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}><Badge status="review">review</Badge><span style={{ fontSize: 12, color: colors.textMuted }}>Needs evaluation</span></div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}><Badge status="experimental">experimental</Badge><span style={{ fontSize: 12, color: colors.textMuted }}>Not yet validated</span></div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}><Badge status="new">new</Badge><span style={{ fontSize: 12, color: colors.textMuted }}>Recently created</span></div>
-            </div>
+          <Card title="Pattern Cards">
+            <p style={{ margin: '0 0 16px 0', fontSize: 13, color: colors.textMuted }}>
+              Expand any card to see template, gotchas, and when NOT to use. Each card links to decisions where it was used.
+            </p>
+            {patterns.map(p => (
+              <PatternCard
+                key={p.id}
+                pattern={p}
+                expanded={expandedPatterns[p.id]}
+                onToggle={() => setExpandedPatterns({ ...expandedPatterns, [p.id]: !expandedPatterns[p.id] })}
+                onDecisionClick={handleDecisionClick}
+              />
+            ))}
           </Card>
 
           <ResumeWithClaude />
         </div>
       )}
 
+      {/* PATTERN AUDIT TAB (Module 5) */}
+      {activeTab === 'audit' && (
+        <div>
+          <Card title="Pattern Health Metrics (Module 5 Audit)">
+            <p style={{ margin: '0 0 16px 0', fontSize: 13, color: colors.textMuted }}>
+              Health metrics for evaluating which patterns to keep, refactor, or retire. Patterns with ⚠ have usage mismatch (actual &lt; expected/2).
+            </p>
+            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 13 }}>
+              <thead>
+                <tr style={{ borderBottom: `2px solid ${colors.border}` }}>
+                  <th style={{ textAlign: 'left', padding: 8, color: colors.textMuted }}>Pattern</th>
+                  <th style={{ textAlign: 'center', padding: 8, color: colors.textMuted }}>Status</th>
+                  <th style={{ textAlign: 'center', padding: 8, color: colors.textMuted }}>Last Used</th>
+                  <th style={{ textAlign: 'center', padding: 8, color: colors.textMuted }}>Uses/mo</th>
+                  <th style={{ textAlign: 'center', padding: 8, color: colors.textMuted }}>Load</th>
+                  <th style={{ textAlign: 'center', padding: 8, color: colors.textMuted }}>Burden</th>
+                </tr>
+              </thead>
+              <tbody>
+                {patterns.map(p => {
+                  const metrics = patternHealthMetrics[p.id] || {};
+                  const mismatch = metrics.monthlyUsesActual < metrics.monthlyUsesExpected / 2;
+                  return (
+                    <tr key={p.id} style={{ borderBottom: `1px solid ${colors.border}` }}>
+                      <td style={{ padding: 8, color: colors.text }}>{p.name}</td>
+                      <td style={{ padding: 8, textAlign: 'center' }}><Badge status={p.status}>{p.status}</Badge></td>
+                      <td style={{ padding: 8, textAlign: 'center', fontFamily: 'JetBrains Mono', fontSize: 11, color: colors.textDim }}>{metrics.lastUsed || '-'}</td>
+                      <td style={{ padding: 8, textAlign: 'center', color: mismatch ? colors.warning : colors.text }}>
+                        {metrics.monthlyUsesActual || 0}/{metrics.monthlyUsesExpected || 0} {mismatch && '⚠'}
+                      </td>
+                      <td style={{ padding: 8, textAlign: 'center' }}><Badge status={metrics.cognitiveLoad || 'medium'}>{metrics.cognitiveLoad || '-'}</Badge></td>
+                      <td style={{ padding: 8, textAlign: 'center', color: (metrics.maintenanceBurden || 0) > 4 ? colors.warning : colors.text }}>{metrics.maintenanceBurden || '-'}</td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </Card>
+
+          <Card title="Module 5 Exercise Phases" style={{ marginTop: 20 }}>
+            {[
+              { name: 'Pattern Inventory and Usage Measurement', time: '10 min', desc: 'List patterns, measure actual vs expected usage' },
+              { name: 'Cognitive Load Measurement', time: '10 min', desc: 'Score each: Low/Medium/High' },
+              { name: 'Maintenance Burden Analysis', time: '10 min', desc: '(Failures×2) + Mods + (Deps×3) + Fix time' },
+              { name: 'Pattern Triage', time: '10 min', desc: 'Create merge, deprecate, refactor lists' },
+              { name: 'Lifecycle Policy', time: '5 min', desc: 'Write promotion and retirement rules' },
+            ].map((phase, i) => (
+              <div key={i} style={{ padding: 12, background: colors.surfaceHover, borderRadius: 6, marginBottom: 8 }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4 }}>
+                  <span style={{ fontSize: 13, fontWeight: 600, color: colors.text }}>Phase {i+1}: {phase.name}</span>
+                  <span style={{ fontSize: 11, color: colors.textDim }}>{phase.time}</span>
+                </div>
+                <p style={{ margin: 0, fontSize: 12, color: colors.textMuted }}>{phase.desc}</p>
+              </div>
+            ))}
+          </Card>
+
+          <ResumeWithClaude />
+        </div>
+      )}
+
+      {/* EVIDENCE LOG TAB */}
       {activeTab === 'evidence' && (
         <div>
           <Card title="Evidence Log (for Progress Checks)">
             <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 13 }}>
               <thead>
                 <tr style={{ borderBottom: `2px solid ${colors.border}` }}>
-                  <th style={{ textAlign: 'left', padding: '12px 8px', color: colors.textMuted, fontWeight: 600 }}>Date</th>
-                  <th style={{ textAlign: 'left', padding: '12px 8px', color: colors.textMuted, fontWeight: 600 }}>Work Done</th>
-                  <th style={{ textAlign: 'center', padding: '12px 8px', color: colors.textMuted, fontWeight: 600 }}>Module</th>
+                  <th style={{ textAlign: 'left', padding: 8, color: colors.textMuted }}>Date</th>
+                  <th style={{ textAlign: 'left', padding: 8, color: colors.textMuted }}>Work Done</th>
+                  <th style={{ textAlign: 'center', padding: 8, color: colors.textMuted }}>Module</th>
+                  <th style={{ textAlign: 'center', padding: 8, color: colors.textMuted }}>Decision</th>
                 </tr>
               </thead>
               <tbody>
-                {data.evidenceLog.slice().reverse().map((e, i) => (
+                {evidenceLog.slice().reverse().map((e, i) => (
                   <tr key={i} style={{ borderBottom: `1px solid ${colors.border}` }}>
-                    <td style={{ padding: '12px 8px', color: colors.textDim, fontFamily: 'JetBrains Mono, monospace', fontSize: 12 }}>{e.date}</td>
-                    <td style={{ padding: '12px 8px', color: colors.text }}>{e.work}</td>
-                    <td style={{ padding: '12px 8px', textAlign: 'center' }}>
-                      <span style={{
-                        display: 'inline-flex', width: 24, height: 24, borderRadius: '50%',
-                        alignItems: 'center', justifyContent: 'center', fontSize: 12, fontWeight: 600,
-                        background: colors.accentDim, color: colors.accent
-                      }}>{e.module}</span>
+                    <td style={{ padding: 8, fontFamily: 'JetBrains Mono', fontSize: 11, color: colors.textDim }}>{e.date}</td>
+                    <td style={{ padding: 8, color: colors.text }}>{e.work}</td>
+                    <td style={{ padding: 8, textAlign: 'center' }}>
+                      <span style={{ width: 20, height: 20, borderRadius: '50%', background: colors.accentDim, color: colors.accent, fontSize: 11, fontWeight: 600, display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}>{e.module}</span>
+                    </td>
+                    <td style={{ padding: 8, textAlign: 'center' }}>
+                      {e.decisionId ? (
+                        <button onClick={() => handleDecisionClick(e.decisionId)} style={{ background: 'none', border: 'none', color: colors.accent, fontSize: 11, cursor: 'pointer', textDecoration: 'underline' }}>
+                          View →
+                        </button>
+                      ) : '-'}
                     </td>
                   </tr>
                 ))}
@@ -585,7 +846,7 @@ function AICREDDashboard() {
       )}
 
       <footer style={{ marginTop: 32, textAlign: 'center', fontSize: 12, color: colors.textDim }}>
-        Last updated: {data.lastUpdated} • <a href="https://aicred.ai" target="_blank" rel="noopener" style={{ color: colors.accent, textDecoration: 'none' }}>aicred.ai</a>
+        Last updated: 2025-12-28 • <a href="https://aicred.ai" target="_blank" rel="noopener" style={{ color: colors.accent, textDecoration: 'none' }}>aicred.ai</a>
       </footer>
     </div>
   );
