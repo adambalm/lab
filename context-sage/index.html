@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Context Sage - System Architecture</title>
+  <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+  <script type="text/babel">
+const { useState } = React;
+
+const ContextSageArchitecture = () => {
+  const [view, setView] = useState('system');
+
+  const colors = {
+    bg: '#fffff8',
+    text: '#111',
+    muted: '#454545',
+    accent: '#a00000',
+    claude: '#8b5a2b',
+    chatgpt: '#2f5233',
+    human: '#1a4a6e',
+    border: '#ddd'
+  };
+
+  const SystemView = () => (
+    <div style={{ padding: '24px' }}>
+      <h2 style={{ fontStyle: 'italic', fontWeight: 'normal', marginBottom: '16px' }}>
+        Infrastructure Architecture
+      </h2>
+      <p style={{ color: colors.muted, marginBottom: '24px', maxWidth: '55em' }}>
+        Two machines, one knowledge base. Git as synchronization layer. MCP as AI interface.
+      </p>
+
+      <svg viewBox="0 0 800 520" style={{ width: '100%', maxWidth: '800px', height: 'auto' }}>
+        <rect x="200" y="20" width="400" height="120" fill="#f5f5f0" stroke={colors.border} strokeWidth="2" rx="8"/>
+        <text x="400" y="50" textAnchor="middle" fontFamily="Georgia" fontSize="14" fontWeight="bold">KNOWLEDGE BASE</text>
+        <text x="400" y="70" textAnchor="middle" fontFamily="Georgia" fontSize="11" fill={colors.muted}>(basic-memory repo)</text>
+
+        <g transform="translate(220, 85)">
+          {['Protocols', 'Decisions', 'Projects'].map((item, i) => (
+            <g key={item} transform={`translate(${i * 120}, 0)`}>
+              <rect width="100" height="30" fill="white" stroke={colors.border} rx="4"/>
+              <text x="50" y="20" textAnchor="middle" fontFamily="Georgia" fontSize="10">{item}</text>
+            </g>
+          ))}
+        </g>
+
+        <line x1="400" y1="140" x2="400" y2="180" stroke={colors.muted} strokeWidth="2"/>
+        <polygon points="400,185 395,175 405,175" fill={colors.muted}/>
+        <text x="415" y="165" fontFamily="Georgia" fontSize="10" fill={colors.muted}>Git sync</text>
+
+        <line x1="400" y1="190" x2="400" y2="210" stroke={colors.muted} strokeWidth="2"/>
+        <line x1="200" y1="210" x2="600" y2="210" stroke={colors.muted} strokeWidth="2"/>
+        <line x1="200" y1="210" x2="200" y2="240" stroke={colors.muted} strokeWidth="2"/>
+        <line x1="600" y1="210" x2="600" y2="240" stroke={colors.muted} strokeWidth="2"/>
+
+        <rect x="100" y="240" width="200" height="130" fill="#f0f5f0" stroke={colors.border} strokeWidth="2" rx="8"/>
+        <text x="200" y="265" textAnchor="middle" fontFamily="Georgia" fontSize="13" fontWeight="bold">adambalm</text>
+        <text x="200" y="282" textAnchor="middle" fontFamily="Georgia" fontSize="10" fill={colors.muted}>Ubuntu 24.04</text>
+        <text x="200" y="298" textAnchor="middle" fontFamily="Georgia" fontSize="10" fill={colors.muted}>Source of Truth</text>
+        <rect x="120" y="310" width="160" height="25" fill="white" stroke={colors.border} rx="4"/>
+        <text x="200" y="327" textAnchor="middle" fontFamily="Georgia" fontSize="10">MCP Server :8765</text>
+        <rect x="120" y="340" width="160" height="20" fill="white" stroke={colors.border} rx="4"/>
+        <text x="200" y="354" textAnchor="middle" fontFamily="Georgia" fontSize="9" fill={colors.muted}>100.111.114.84</text>
+
+        <rect x="500" y="240" width="200" height="130" fill="#f5f0f5" stroke={colors.border} strokeWidth="2" rx="8"/>
+        <text x="600" y="265" textAnchor="middle" fontFamily="Georgia" fontSize="13" fontWeight="bold">suphouse</text>
+        <text x="600" y="282" textAnchor="middle" fontFamily="Georgia" fontSize="10" fill={colors.muted}>Windows 11</text>
+        <text x="600" y="298" textAnchor="middle" fontFamily="Georgia" fontSize="10" fill={colors.muted}>Mobile Work</text>
+        <rect x="520" y="310" width="160" height="25" fill="white" stroke={colors.border} rx="4"/>
+        <text x="600" y="327" textAnchor="middle" fontFamily="Georgia" fontSize="10">MCP Server</text>
+        <rect x="520" y="340" width="160" height="20" fill="white" stroke={colors.border} rx="4"/>
+        <text x="600" y="354" textAnchor="middle" fontFamily="Georgia" fontSize="9" fill={colors.muted}>Git clone + watcher</text>
+
+        <line x1="300" y1="305" x2="500" y2="305" stroke={colors.accent} strokeWidth="2" strokeDasharray="5,5"/>
+        <text x="400" y="295" textAnchor="middle" fontFamily="Georgia" fontSize="10" fill={colors.accent}>Tailscale</text>
+
+        <line x1="200" y1="370" x2="200" y2="410" stroke={colors.muted} strokeWidth="2"/>
+        <line x1="600" y1="370" x2="600" y2="410" stroke={colors.muted} strokeWidth="2"/>
+
+        <rect x="120" y="420" width="160" height="50" fill="white" stroke={colors.claude} strokeWidth="2" rx="8"/>
+        <text x="200" y="445" textAnchor="middle" fontFamily="Georgia" fontSize="12" fill={colors.claude}>Claude Code</text>
+        <text x="200" y="460" textAnchor="middle" fontFamily="Georgia" fontSize="9" fill={colors.muted}>Execution Agent</text>
+
+        <rect x="520" y="420" width="160" height="50" fill="white" stroke={colors.claude} strokeWidth="2" rx="8"/>
+        <text x="600" y="445" textAnchor="middle" fontFamily="Georgia" fontSize="12" fill={colors.claude}>Claude Desktop</text>
+        <text x="600" y="460" textAnchor="middle" fontFamily="Georgia" fontSize="9" fill={colors.muted}>Planning Agent</text>
+
+        <rect x="320" y="420" width="160" height="50" fill="white" stroke={colors.human} strokeWidth="2" rx="8"/>
+        <text x="400" y="445" textAnchor="middle" fontFamily="Georgia" fontSize="12" fill={colors.human}>Obsidian</text>
+        <text x="400" y="460" textAnchor="middle" fontFamily="Georgia" fontSize="9" fill={colors.muted}>Human Interface</text>
+
+        <g transform="translate(640, 440)">
+          <text x="0" y="0" fontFamily="Georgia" fontSize="9" fill={colors.muted}>AI: MCP tools</text>
+          <text x="0" y="14" fontFamily="Georgia" fontSize="9" fill={colors.muted}>Human: Obsidian</text>
+          <text x="0" y="28" fontFamily="Georgia" fontSize="9" fill={colors.muted}>Same files, different interfaces</text>
+        </g>
+      </svg>
+    </div>
+  );
+
+  const LoopView = () => (
+    <div style={{ padding: '24px' }}>
+      <h2 style={{ fontStyle: 'italic', fontWeight: 'normal', marginBottom: '16px' }}>
+        Learning Loop Architecture
+      </h2>
+      <p style={{ color: colors.muted, marginBottom: '8px', maxWidth: '55em' }}>
+        The system improves from every interaction. Feedback captured → KB updated → next generation reads improvement.
+      </p>
+      <p style={{ color: colors.accent, marginBottom: '24px', fontSize: '14px', fontStyle: 'italic' }}>
+        This pattern has been proven through 6+ documented iterations.
+      </p>
+
+      <svg viewBox="0 0 700 480" style={{ width: '100%', maxWidth: '700px', height: 'auto' }}>
+        <g transform="translate(350, 60)">
+          <circle r="45" fill="#f0f5f0" stroke={colors.border} strokeWidth="2"/>
+          <text y="-8" textAnchor="middle" fontFamily="Georgia" fontSize="11" fontWeight="bold">1. CAPTURE</text>
+          <text y="8" textAnchor="middle" fontFamily="Georgia" fontSize="9" fill={colors.muted}>Document</text>
+          <text y="20" textAnchor="middle" fontFamily="Georgia" fontSize="9" fill={colors.muted}>what was learned</text>
+        </g>
+
+        <g transform="translate(540, 170)">
+          <circle r="45" fill="#f5f0f0" stroke={colors.border} strokeWidth="2"/>
+          <text y="-8" textAnchor="middle" fontFamily="Georgia" fontSize="11" fontWeight="bold">2. GENERALIZE</text>
+          <text y="8" textAnchor="middle" fontFamily="Georgia" fontSize="9" fill={colors.muted}>Extract</text>
+          <text y="20" textAnchor="middle" fontFamily="Georgia" fontSize="9" fill={colors.muted}>the principle</text>
+        </g>
+
+        <g transform="translate(480, 340)">
+          <circle r="45" fill="#f5f5f0" stroke={colors.border} strokeWidth="2"/>
+          <text y="-8" textAnchor="middle" fontFamily="Georgia" fontSize="11" fontWeight="bold">3. PROPAGATE</text>
+          <text y="8" textAnchor="middle" fontFamily="Georgia" fontSize="9" fill={colors.muted}>Update related</text>
+          <text y="20" textAnchor="middle" fontFamily="Georgia" fontSize="9" fill={colors.muted}>documents</text>
+        </g>
+
+        <g transform="translate(220, 340)">
+          <circle r="45" fill="#f0f0f5" stroke={colors.border} strokeWidth="2"/>
+          <text y="-8" textAnchor="middle" fontFamily="Georgia" fontSize="11" fontWeight="bold">4. REFLECT</text>
+          <text y="8" textAnchor="middle" fontFamily="Georgia" fontSize="9" fill={colors.muted}>Note if protocols</text>
+          <text y="20" textAnchor="middle" fontFamily="Georgia" fontSize="9" fill={colors.muted}>need revision</text>
+        </g>
+
+        <g transform="translate(160, 170)">
+          <circle r="45" fill="#f0f5f5" stroke={colors.border} strokeWidth="2"/>
+          <text y="-8" textAnchor="middle" fontFamily="Georgia" fontSize="11" fontWeight="bold">5. RETRIEVE</text>
+          <text y="8" textAnchor="middle" fontFamily="Georgia" fontSize="9" fill={colors.muted}>Next session</text>
+          <text y="20" textAnchor="middle" fontFamily="Georgia" fontSize="9" fill={colors.muted}>reads KB</text>
+        </g>
+
+        <defs>
+          <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+            <polygon points="0 0, 10 3.5, 0 7" fill={colors.accent}/>
+          </marker>
+        </defs>
+
+        <path d="M 390 85 Q 450 100 500 140" fill="none" stroke={colors.accent} strokeWidth="2" markerEnd="url(#arrowhead)"/>
+        <path d="M 555 215 Q 560 270 520 305" fill="none" stroke={colors.accent} strokeWidth="2" markerEnd="url(#arrowhead)"/>
+        <path d="M 435 355 Q 350 380 265 355" fill="none" stroke={colors.accent} strokeWidth="2" markerEnd="url(#arrowhead)"/>
+        <path d="M 180 305 Q 140 270 145 215" fill="none" stroke={colors.accent} strokeWidth="2" markerEnd="url(#arrowhead)"/>
+        <path d="M 200 140 Q 250 100 310 85" fill="none" stroke={colors.accent} strokeWidth="2" markerEnd="url(#arrowhead)"/>
+
+        <circle cx="350" cy="220" r="50" fill="white" stroke={colors.border} strokeWidth="3"/>
+        <text x="350" y="210" textAnchor="middle" fontFamily="Georgia" fontSize="12" fontWeight="bold">Knowledge</text>
+        <text x="350" y="228" textAnchor="middle" fontFamily="Georgia" fontSize="12" fontWeight="bold">Base</text>
+        <text x="350" y="246" textAnchor="middle" fontFamily="Georgia" fontSize="9" fill={colors.muted}>(Git-versioned)</text>
+
+        <line x1="350" y1="170" x2="350" y2="105" stroke={colors.border} strokeWidth="1" strokeDasharray="3,3"/>
+        <line x1="395" y1="200" x2="495" y2="170" stroke={colors.border} strokeWidth="1" strokeDasharray="3,3"/>
+        <line x1="385" y1="260" x2="435" y2="315" stroke={colors.border} strokeWidth="1" strokeDasharray="3,3"/>
+        <line x1="315" y1="260" x2="265" y2="315" stroke={colors.border} strokeWidth="1" strokeDasharray="3,3"/>
+        <line x1="305" y1="200" x2="205" y2="170" stroke={colors.border} strokeWidth="1" strokeDasharray="3,3"/>
+
+        <rect x="50" y="410" width="600" height="60" fill="#f9f9f5" stroke={colors.border} rx="4"/>
+        <text x="350" y="432" textAnchor="middle" fontFamily="Georgia" fontSize="11" fontWeight="bold">Proven Evidence (6 iterations)</text>
+        <text x="350" y="450" textAnchor="middle" fontFamily="Georgia" fontSize="10" fill={colors.muted}>
+          Demo v1-v6 • Git Automation Lanesborough • ComfyUI WAN 2.2 • Ephemeral Authorship Triptych
+        </text>
+        <text x="350" y="462" textAnchor="middle" fontFamily="Georgia" fontSize="9" fill={colors.accent}>
+          Each iteration fed learnings back that improved subsequent iterations
+        </text>
+      </svg>
+    </div>
+  );
+
+  const FlowView = () => (
+    <div style={{ padding: '24px' }}>
+      <h2 style={{ fontStyle: 'italic', fontWeight: 'normal', marginBottom: '16px' }}>
+        7-Step Information Flow (Lanesborough Protocol)
+      </h2>
+      <p style={{ color: colors.muted, marginBottom: '24px', maxWidth: '55em' }}>
+        When multiple AI agents collaborate, decisions flow through a governed process.
+        Human operator approves significant decisions.
+      </p>
+
+      <svg viewBox="0 0 700 560" style={{ width: '100%', maxWidth: '700px', height: 'auto' }}>
+        {[
+          { num: '1', title: 'PROPOSAL', desc: 'Agent proposes action/content', agent: 'claude' },
+          { num: '2', title: 'CHALLENGE', desc: 'Other agent(s) review and challenge', agent: 'chatgpt' },
+          { num: '3', title: 'REFINEMENT', desc: 'Proposal updated based on challenge', agent: 'claude' },
+          { num: '4', title: 'HANDSHAKE', desc: 'Agents agree on approach', agent: null },
+          { num: '5', title: 'APPROVAL', desc: 'Human operator approves', agent: 'human' },
+          { num: '6', title: 'RECORD', desc: 'Decision captured in KB with rationale', agent: null },
+          { num: '7', title: 'RETRIEVAL', desc: 'Future sessions read the decision', agent: null }
+        ].map((step, i) => (
+          <g key={step.num} transform={`translate(50, ${30 + i * 70})`}>
+            <circle cx="25" cy="25" r="20"
+              fill={step.agent === 'claude' ? colors.claude :
+                    step.agent === 'chatgpt' ? colors.chatgpt :
+                    step.agent === 'human' ? colors.human : '#666'}
+              opacity={step.agent ? 1 : 0.4}
+            />
+            <text x="25" y="30" textAnchor="middle" fontFamily="Georgia" fontSize="14" fill="white" fontWeight="bold">
+              {step.num}
+            </text>
+
+            <rect x="60" y="5" width="500" height="40" fill="white" stroke={colors.border} rx="4"/>
+            <text x="80" y="25" fontFamily="Georgia" fontSize="12" fontWeight="bold">{step.title}</text>
+            <text x="80" y="38" fontFamily="Georgia" fontSize="10" fill={colors.muted}>{step.desc}</text>
+
+            {step.agent && (
+              <text x="540" y="30" textAnchor="end" fontFamily="Georgia" fontSize="9"
+                fill={step.agent === 'claude' ? colors.claude :
+                      step.agent === 'chatgpt' ? colors.chatgpt : colors.human}>
+                {step.agent === 'claude' ? 'Claude' :
+                 step.agent === 'chatgpt' ? 'ChatGPT' : 'Human'}
+              </text>
+            )}
+
+            {i < 6 && (
+              <line x1="25" y1="50" x2="25" y2="65" stroke={colors.muted} strokeWidth="2" markerEnd="url(#arrowhead)"/>
+            )}
+          </g>
+        ))}
+
+        <path d="M 25 530 L 25 545 Q 25 555 15 555 L -10 555 Q -20 555 -20 545 L -20 55 Q -20 45 -10 45 L 25 45"
+          fill="none" stroke={colors.accent} strokeWidth="2" strokeDasharray="5,5"/>
+        <text x="-25" y="300" fontFamily="Georgia" fontSize="9" fill={colors.accent} transform="rotate(-90 -25 300)">
+          Future sessions access decisions
+        </text>
+
+        <g transform="translate(580, 500)">
+          <circle cx="10" cy="0" r="6" fill={colors.claude}/>
+          <text x="22" y="4" fontFamily="Georgia" fontSize="9">Claude</text>
+          <circle cx="10" cy="18" r="6" fill={colors.chatgpt}/>
+          <text x="22" y="22" fontFamily="Georgia" fontSize="9">ChatGPT</text>
+          <circle cx="10" cy="36" r="6" fill={colors.human}/>
+          <text x="22" y="40" fontFamily="Georgia" fontSize="9">Human</text>
+        </g>
+      </svg>
+    </div>
+  );
+
+  const SkillLoopView = () => (
+    <div style={{ padding: '24px' }}>
+      <h2 style={{ fontStyle: 'italic', fontWeight: 'normal', marginBottom: '16px' }}>
+        Thin Skill Learning Loop
+      </h2>
+      <p style={{ color: colors.muted, marginBottom: '8px', maxWidth: '55em' }}>
+        Skills read from the same knowledge base they generate artifacts about.
+        Feedback flows back, improving future generations.
+      </p>
+      <p style={{ color: colors.accent, marginBottom: '24px', fontSize: '14px', fontStyle: 'italic' }}>
+        This diagram was built by the system it describes.
+      </p>
+
+      <svg viewBox="0 0 600 400" style={{ width: '100%', maxWidth: '600px', height: 'auto' }}>
+        <rect x="50" y="30" width="500" height="50" fill="#f0f5f0" stroke={colors.border} strokeWidth="2" rx="4"/>
+        <text x="70" y="50" fontFamily="Georgia" fontSize="11" fontWeight="bold">1.</text>
+        <text x="90" y="50" fontFamily="Georgia" fontSize="11">SKILL reads INSTRUCTIONS + BOOTSTRAP</text>
+        <text x="90" y="68" fontFamily="Georgia" fontSize="9" fill={colors.muted}>Context loaded from KB into agent</text>
+
+        <line x1="300" y1="80" x2="300" y2="100" stroke={colors.muted} strokeWidth="2"/>
+        <polygon points="300,105 295,95 305,95" fill={colors.muted}/>
+
+        <rect x="50" y="110" width="500" height="50" fill="#f5f0f0" stroke={colors.border} strokeWidth="2" rx="4"/>
+        <text x="70" y="130" fontFamily="Georgia" fontSize="11" fontWeight="bold">2.</text>
+        <text x="90" y="130" fontFamily="Georgia" fontSize="11">SKILL generates ARTIFACT</text>
+        <text x="90" y="148" fontFamily="Georgia" fontSize="9" fill={colors.muted}>Demo, document, code, or other output</text>
+
+        <line x1="300" y1="160" x2="300" y2="180" stroke={colors.muted} strokeWidth="2"/>
+        <polygon points="300,185 295,175 305,175" fill={colors.muted}/>
+
+        <rect x="50" y="190" width="500" height="50" fill="#f0f0f5" stroke={colors.human} strokeWidth="2" rx="4"/>
+        <text x="70" y="210" fontFamily="Georgia" fontSize="11" fontWeight="bold">3.</text>
+        <text x="90" y="210" fontFamily="Georgia" fontSize="11">USER reviews, gives FEEDBACK</text>
+        <text x="90" y="228" fontFamily="Georgia" fontSize="9" fill={colors.muted}>Human judgment: what works, what doesn't</text>
+
+        <line x1="300" y1="240" x2="300" y2="260" stroke={colors.muted} strokeWidth="2"/>
+        <polygon points="300,265 295,255 305,255" fill={colors.muted}/>
+
+        <rect x="50" y="270" width="500" height="50" fill="#f5f5f0" stroke={colors.border} strokeWidth="2" rx="4"/>
+        <text x="70" y="290" fontFamily="Georgia" fontSize="11" fontWeight="bold">4.</text>
+        <text x="90" y="290" fontFamily="Georgia" fontSize="11">FEEDBACK captured as KB NOTE</text>
+        <text x="90" y="308" fontFamily="Georgia" fontSize="9" fill={colors.muted}>Persisted, Git-versioned, searchable</text>
+
+        <path d="M 300 320 L 300 360 Q 300 380 280 380 L 30 380 Q 10 380 10 360 L 10 55 Q 10 35 30 35 L 45 35"
+          fill="none" stroke={colors.accent} strokeWidth="2"/>
+        <polygon points="50,35 40,30 40,40" fill={colors.accent}/>
+
+        <text x="155" y="370" fontFamily="Georgia" fontSize="10" fill={colors.accent} fontWeight="bold">
+          5. Next generation reads feedback...
+        </text>
+
+        <rect x="10" y="180" width="25" height="30" fill="white" stroke={colors.border} rx="2"/>
+        <text x="22" y="198" textAnchor="middle" fontFamily="Georgia" fontSize="8">KB</text>
+      </svg>
+
+      <div style={{ marginTop: '24px', padding: '16px', background: '#f9f9f5', borderLeft: `3px solid ${colors.accent}` }}>
+        <p style={{ margin: 0, fontFamily: 'Georgia', fontSize: '14px', fontStyle: 'italic' }}>
+          "The demo is generated by a skill that reads from the same knowledge base it's demonstrating.
+          The skill improves because feedback becomes part of what it reads next time."
+        </p>
+      </div>
+    </div>
+  );
+
+  return (
+    <div style={{
+      fontFamily: 'Georgia, serif',
+      background: colors.bg,
+      color: colors.text,
+      minHeight: '100vh',
+      lineHeight: '1.7'
+    }}>
+      <div style={{
+        padding: '24px',
+        borderBottom: `1px solid ${colors.border}`,
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        flexWrap: 'wrap',
+        gap: '16px'
+      }}>
+        <div>
+          <h1 style={{ margin: 0, fontStyle: 'italic', fontWeight: 'normal', fontSize: '24px' }}>
+            Context Sage
+          </h1>
+          <p style={{ margin: '4px 0 0 0', color: colors.muted, fontSize: '14px' }}>
+            System Architecture & Learning Loop
+          </p>
+        </div>
+
+        <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+          {[
+            { id: 'system', label: 'Infrastructure' },
+            { id: 'loop', label: 'Learning Loop' },
+            { id: 'flow', label: 'Lanesborough Flow' },
+            { id: 'skill', label: 'Skill Loop' }
+          ].map(v => (
+            <button
+              key={v.id}
+              onClick={() => setView(v.id)}
+              style={{
+                padding: '8px 16px',
+                fontFamily: 'Georgia',
+                fontSize: '13px',
+                background: view === v.id ? colors.text : 'white',
+                color: view === v.id ? 'white' : colors.text,
+                border: `1px solid ${colors.border}`,
+                borderRadius: '4px',
+                cursor: 'pointer'
+              }}
+            >
+              {v.label}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {view === 'system' && <SystemView />}
+      {view === 'loop' && <LoopView />}
+      {view === 'flow' && <FlowView />}
+      {view === 'skill' && <SkillLoopView />}
+
+      <div style={{
+        padding: '16px 24px',
+        borderTop: `1px solid ${colors.border}`,
+        color: colors.muted,
+        fontSize: '12px'
+      }}>
+        Rendered from Basic Memory KB • {new Date().toISOString().split('T')[0]}
+      </div>
+    </div>
+  );
+};
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(<ContextSageArchitecture />);
+  </script>
+</body>
+</html>
