@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI CRED Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: "Source Sans 3", -apple-system, sans-serif; }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+  <script type="text/babel">
+const { useState } = React;
+
+const data = {
+  score: 7.6,
+  targetScore: 9.0,
+  progress: 60,
+  lastUpdated: '2025-12-25',
+
+  modules: [
+    { id: 1, name: 'Your Prompt Pattern Library', status: 'completed' },
+    { id: 2, name: 'Systematic Prompt Refinement Through Controlled Iteration', status: 'completed' },
+    { id: 3, name: 'Pattern Orchestration: Composing Multi-Step Workflows', status: 'completed' },
+    { id: 4, name: 'Pattern Selection: Single vs. Compound Workflows', status: 'active' },
+    { id: 5, name: 'Mastery & Innovation', status: 'locked' },
+  ],
+
+  currentExercise: {
+    name: 'Three-Approach Test',
+    problem: 'Wallace Stevens essay ("The Rage We Forgot to Name")',
+    why: [
+      'Iterated but unsatisfying',
+      'Multiple unresolved objections',
+      'Meta-problem: AI-authored essay hiding authorship',
+      'Ed can judge both literary and technical dimensions'
+    ],
+    testCases: [
+      { id: 1, name: 'Fix thin LLM technical passage', difficulty: 'Easy', status: 'pending' },
+      { id: 2, name: 'Ground "singer doesn\'t know" claim via close reading', difficulty: 'Typical', status: 'pending' },
+      { id: 3, name: 'Essay as discovery, honest voice, no premature closure', difficulty: 'Hard', status: 'pending' },
+    ],
+    successCriteria: [
+      { name: 'Textual grounding', desc: 'Claims supported by Stevens\'s lines' },
+      { name: 'Close reading technique', desc: 'Attention to language' },
+      { name: 'Prosody', desc: 'Essay\'s own rhythm' },
+      { name: 'Technical accuracy', desc: 'LLM practitioners don\'t object' },
+      { name: 'Literary credibility', desc: 'Poetry critics don\'t object' },
+      { name: 'Honest voice', desc: 'Doesn\'t hide authorship conditions' },
+      { name: 'Argumentative coherence', desc: 'Sound logical structure' },
+      { name: 'No premature closure', desc: 'Holds tensions, resists neat endings' },
+      { name: 'Discovery, not delivery', desc: 'We don\'t know the answer yet' },
+    ],
+    keyInsight: 'The essay should be a work of discovery. Stevens called out something real about ordering words. The poet is not the singer. We\'re investigating, not concluding.',
+    fallback: 'If too hard, pivot to audience-specific demo artifacts.',
+    phases: [
+      { id: 1, name: 'Exercise Setup', status: 'completed' },
+      { id: 2, name: 'Single Complex Prompt', status: 'next' },
+      { id: 3, name: 'Compound Workflow', status: 'pending' },
+      { id: 4, name: 'Novel Pattern', status: 'pending' },
+      { id: 5, name: 'Comparison & Framework', status: 'pending' },
+    ]
+  },
+
+  evidenceLog: [
+    { date: '2025-12-24', work: 'Systematic Prompt Iteration Protocol documented', module: 2 },
+    { date: '2025-12-24', work: 'Memento classifier: 26% → 100% via structural constraint', module: 2 },
+    { date: '2025-12-24', work: 'Selective Deep Dive Pattern documented', module: 3 },
+    { date: '2025-12-25', work: 'Module 3 Progress Check completed', module: 3 },
+    { date: '2025-12-25', work: 'Module 4 exercise setup: Stevens essay selected', module: 4 },
+  ],
+
+  patterns: [
+    { name: 'Systematic Prompt Iteration Protocol', type: 'prompt', status: 'documented', meta: true },
+    { name: 'Selective Deep Dive Pattern', type: 'prompt', status: 'documented' },
+    { name: 'Multi-Agent Adversarial Review Pattern', type: 'prompt', status: 'documented' },
+    { name: 'Structured Cross-Examination Pattern', type: 'prompt', status: 'documented' },
+    { name: 'Visualization Generator Pattern', type: 'prompt', status: 'documented' },
+    { name: 'Canonical Base with Overlays Pattern', type: 'architectural', status: 'documented' },
+    { name: 'Targeted Artifact Generation Pattern', type: 'architectural', status: 'documented' },
+    { name: 'UI Experimentation to Automation Pattern', type: 'workflow', status: 'documented' },
+  ],
+
+  testResult: {
+    artifact: 'The Ordering Imagination v1',
+    verdict: 'Moderately impressed',
+    criteria: [
+      { name: 'Textual grounding', result: 'fail', note: 'Metaphor imposed, not derived' },
+      { name: 'Close reading technique', result: 'fail', note: 'Quoted but didn\'t read' },
+      { name: 'Honest voice', result: 'pass', note: 'Didn\'t hide authorship conditions' },
+      { name: 'Discovery, not delivery', result: 'pass', note: 'Attempted' },
+      { name: 'Technical accuracy', result: 'pass', note: 'No objections raised' },
+      { name: 'Literary credibility', result: 'warn', note: 'Insufficient close reading' },
+    ],
+    learning: 'The literary standard comes first. Technical sophistication without close reading is "AI slop with good architecture."',
+    next: 'v2 should start *in* Stevens\'s language. Do the close reading first.'
+  }
+};
+
+// Color tokens
+const colors = {
+  bg: '#0a0a0c',
+  surface: '#141418',
+  surfaceHover: '#1c1c22',
+  border: '#2a2a32',
+  borderLight: '#3a3a44',
+  text: '#e8e8ec',
+  textMuted: '#8888a0',
+  textDim: '#5a5a6a',
+  accent: '#60a5fa',
+  accentDim: '#2563eb',
+  success: '#4ade80',
+  successDim: '#166534',
+  warning: '#fbbf24',
+  warningDim: '#854d0e',
+  danger: '#f87171',
+  dangerDim: '#991b1b',
+  purple: '#a78bfa',
+};
+
+// Score ring component
+function ScoreRing({ score, target, size = 140 }) {
+  const stroke = 8;
+  const radius = (size - stroke) / 2;
+  const circumference = 2 * Math.PI * radius;
+  const progress = (score / 10) * circumference;
+  const targetProgress = (target / 10) * circumference;
+
+  return (
+    <div style={{ position: 'relative', width: size, height: size }}>
+      <svg width={size} height={size} style={{ transform: 'rotate(-90deg)' }}>
+        <circle
+          cx={size/2} cy={size/2} r={radius}
+          fill="none" stroke={colors.border} strokeWidth={stroke}
+        />
+        <circle
+          cx={size/2} cy={size/2} r={radius}
+          fill="none" stroke={colors.borderLight} strokeWidth={stroke}
+          strokeDasharray={circumference}
+          strokeDashoffset={circumference - targetProgress}
+          strokeLinecap="round"
+          opacity={0.4}
+        />
+        <circle
+          cx={size/2} cy={size/2} r={radius}
+          fill="none" stroke={colors.accent} strokeWidth={stroke}
+          strokeDasharray={circumference}
+          strokeDashoffset={circumference - progress}
+          strokeLinecap="round"
+          style={{ transition: 'stroke-dashoffset 0.8s ease-out' }}
+        />
+      </svg>
+      <div style={{
+        position: 'absolute', top: 0, left: 0, right: 0, bottom: 0,
+        display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center'
+      }}>
+        <span style={{ fontSize: 32, fontWeight: 700, color: colors.text, fontFamily: 'JetBrains Mono, monospace' }}>
+          {score.toFixed(1)}
+        </span>
+        <span style={{ fontSize: 12, color: colors.textMuted }}>/ {target}</span>
+      </div>
+    </div>
+  );
+}
+
+// Module bar
+function ModuleBar({ modules }) {
+  const getColor = (status) => ({
+    completed: colors.success,
+    active: colors.accent,
+    locked: colors.textDim
+  }[status]);
+
+  return (
+    <div style={{ display: 'flex', gap: 4, marginBottom: 8 }}>
+      {modules.map((m, i) => (
+        <div key={i} style={{
+          flex: 1, height: 6, borderRadius: 3,
+          background: m.status === 'locked' ? colors.border : getColor(m.status),
+          opacity: m.status === 'locked' ? 0.4 : 1,
+          transition: 'all 0.3s ease'
+        }} />
+      ))}
+    </div>
+  );
+}
+
+// Status badge
+function Badge({ status, children }) {
+  const styles = {
+    completed: { bg: colors.successDim, color: colors.success },
+    active: { bg: colors.accentDim, color: colors.accent },
+    locked: { bg: colors.border, color: colors.textDim },
+    pending: { bg: colors.border, color: colors.textMuted },
+    next: { bg: colors.accentDim, color: colors.accent },
+    pass: { bg: colors.successDim, color: colors.success },
+    fail: { bg: colors.dangerDim, color: colors.danger },
+    warn: { bg: colors.warningDim, color: colors.warning },
+  };
+  const s = styles[status] || styles.pending;
+
+  return (
+    <span style={{
+      display: 'inline-flex', alignItems: 'center', gap: 4,
+      padding: '3px 8px', borderRadius: 4, fontSize: 11, fontWeight: 600,
+      background: s.bg, color: s.color, textTransform: 'uppercase', letterSpacing: '0.02em'
+    }}>
+      {status === 'completed' && '✓ '}
+      {status === 'active' && '● '}
+      {status === 'locked' && '🔒 '}
+      {children || status}
+    </span>
+  );
+}
+
+// Card component
+function Card({ title, children, style }) {
+  return (
+    <div style={{
+      background: colors.surface,
+      border: `1px solid ${colors.border}`,
+      borderRadius: 8,
+      padding: 20,
+      ...style
+    }}>
+      {title && <h3 style={{ margin: '0 0 16px 0', fontSize: 13, fontWeight: 600, color: colors.textMuted, textTransform: 'uppercase', letterSpacing: '0.05em' }}>{title}</h3>}
+      {children}
+    </div>
+  );
+}
+
+// Tab component
+function Tabs({ tabs, active, onChange }) {
+  return (
+    <div style={{ display: 'flex', gap: 2, marginBottom: 20, borderBottom: `1px solid ${colors.border}`, paddingBottom: 1 }}>
+      {tabs.map(t => (
+        <button
+          key={t.id}
+          onClick={() => onChange(t.id)}
+          style={{
+            background: active === t.id ? colors.surfaceHover : 'transparent',
+            border: 'none',
+            borderBottom: active === t.id ? `2px solid ${colors.accent}` : '2px solid transparent',
+            padding: '10px 16px',
+            color: active === t.id ? colors.text : colors.textMuted,
+            cursor: 'pointer',
+            fontSize: 13,
+            fontWeight: 500,
+            transition: 'all 0.2s ease',
+            marginBottom: -2
+          }}
+        >
+          {t.label}
+        </button>
+      ))}
+    </div>
+  );
+}
+
+// Main dashboard
+function AICREDDashboard() {
+  const [activeTab, setActiveTab] = useState('overview');
+
+  const tabs = [
+    { id: 'overview', label: 'Overview' },
+    { id: 'exercise', label: 'Current Exercise' },
+    { id: 'patterns', label: 'Pattern Index' },
+    { id: 'evidence', label: 'Evidence Log' },
+  ];
+
+  return (
+    <div style={{
+      minHeight: '100vh',
+      background: colors.bg,
+      color: colors.text,
+      fontFamily: '"Source Sans 3", -apple-system, sans-serif',
+      padding: 24
+    }}>
+      {/* Header */}
+      <header style={{ marginBottom: 32 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 8 }}>
+          <h1 style={{ margin: 0, fontSize: 24, fontWeight: 700, letterSpacing: '-0.02em' }}>
+            AI CRED
+          </h1>
+          <Badge status="active">Module 4</Badge>
+        </div>
+        <p style={{ margin: 0, color: colors.textMuted, fontSize: 14 }}>
+          Pattern Selection: Single vs. Compound Workflows
+        </p>
+      </header>
+
+      <Tabs tabs={tabs} active={activeTab} onChange={setActiveTab} />
+
+      {activeTab === 'overview' && (
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 20 }}>
+          {/* Score Card */}
+          <Card title="Progress">
+            <div style={{ display: 'flex', alignItems: 'center', gap: 24 }}>
+              <ScoreRing score={data.score} target={data.targetScore} />
+              <div>
+                <div style={{ fontSize: 13, color: colors.textMuted, marginBottom: 4 }}>Overall Progress</div>
+                <div style={{ fontSize: 28, fontWeight: 700, color: colors.text, marginBottom: 8 }}>{data.progress}%</div>
+                <ModuleBar modules={data.modules} />
+                <div style={{ fontSize: 12, color: colors.textDim }}>
+                  {data.modules.filter(m => m.status === 'completed').length} of {data.modules.length} modules
+                </div>
+              </div>
+            </div>
+          </Card>
+
+          {/* Module Status */}
+          <Card title="Module Progress">
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+              {data.modules.map((m, i) => (
+                <div key={i} style={{
+                  display: 'flex', alignItems: 'center', gap: 12,
+                  padding: '8px 12px',
+                  background: m.status === 'active' ? colors.surfaceHover : 'transparent',
+                  borderRadius: 6,
+                  borderLeft: m.status === 'active' ? `3px solid ${colors.accent}` : '3px solid transparent'
+                }}>
+                  <span style={{
+                    width: 24, height: 24, borderRadius: '50%',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    fontSize: 12, fontWeight: 600,
+                    background: m.status === 'completed' ? colors.successDim : m.status === 'active' ? colors.accentDim : colors.border,
+                    color: m.status === 'completed' ? colors.success : m.status === 'active' ? colors.accent : colors.textDim
+                  }}>
+                    {m.status === 'completed' ? '✓' : m.id}
+                  </span>
+                  <span style={{
+                    flex: 1, fontSize: 13,
+                    color: m.status === 'locked' ? colors.textDim : colors.text
+                  }}>
+                    {m.name}
+                  </span>
+                  <Badge status={m.status} />
+                </div>
+              ))}
+            </div>
+          </Card>
+
+          {/* Current Exercise Summary */}
+          <Card title="Current Exercise" style={{ gridColumn: 'span 2' }}>
+            <div style={{ display: 'flex', gap: 24 }}>
+              <div style={{ flex: 1 }}>
+                <h4 style={{ margin: '0 0 4px 0', fontSize: 18, fontWeight: 600, color: colors.text }}>
+                  {data.currentExercise.name}
+                </h4>
+                <p style={{ margin: '0 0 16px 0', fontSize: 14, color: colors.textMuted }}>
+                  {data.currentExercise.problem}
+                </p>
+                <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+                  {data.currentExercise.phases.map((p, i) => (
+                    <Badge key={i} status={p.status}>{p.name}</Badge>
+                  ))}
+                </div>
+              </div>
+              <div style={{ width: 200 }}>
+                <div style={{ fontSize: 12, color: colors.textMuted, marginBottom: 8 }}>Test Cases</div>
+                {data.currentExercise.testCases.map((tc, i) => (
+                  <div key={i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '6px 0', borderBottom: `1px solid ${colors.border}` }}>
+                    <span style={{ fontSize: 13, color: colors.text }}>Case {tc.id}</span>
+                    <span style={{ fontSize: 11, color: {Easy: colors.success, Typical: colors.warning, Hard: colors.danger}[tc.difficulty] }}>{tc.difficulty}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </Card>
+
+          {/* Test Result */}
+          {data.testResult && (
+            <Card title="Latest Test Result" style={{ gridColumn: 'span 2' }}>
+              <div style={{ display: 'flex', gap: 24 }}>
+                <div style={{ flex: 1 }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 12 }}>
+                    <h4 style={{ margin: 0, fontSize: 16, fontWeight: 600, color: colors.text }}>
+                      {data.testResult.artifact}
+                    </h4>
+                    <Badge status="warn">{data.testResult.verdict}</Badge>
+                  </div>
+                  <p style={{ margin: '0 0 12px 0', fontSize: 13, color: colors.textMuted, fontStyle: 'italic' }}>
+                    "{data.testResult.learning}"
+                  </p>
+                  <p style={{ margin: 0, fontSize: 12, color: colors.accent }}>
+                    → {data.testResult.next}
+                  </p>
+                </div>
+                <div style={{ width: 280 }}>
+                  <div style={{ fontSize: 12, color: colors.textMuted, marginBottom: 8 }}>Criteria Results</div>
+                  {data.testResult.criteria.map((c, i) => (
+                    <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '4px 0' }}>
+                      <span style={{ width: 16, textAlign: 'center' }}>
+                        {c.result === 'pass' ? '✓' : c.result === 'fail' ? '✗' : '⚠'}
+                      </span>
+                      <span style={{ flex: 1, fontSize: 12, color: colors.textMuted }}>{c.name}</span>
+                      <Badge status={c.result}>{c.result}</Badge>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </Card>
+          )}
+        </div>
+      )}
+
+      {activeTab === 'exercise' && (
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20 }}>
+          <Card title="Problem Context">
+            <h4 style={{ margin: '0 0 12px 0', fontSize: 16, color: colors.text }}>{data.currentExercise.problem}</h4>
+            <div style={{ fontSize: 12, color: colors.textMuted, marginBottom: 8 }}>Why this problem:</div>
+            <ul style={{ margin: 0, paddingLeft: 20, fontSize: 13, color: colors.textMuted }}>
+              {data.currentExercise.why.map((w, i) => <li key={i} style={{ marginBottom: 4 }}>{w}</li>)}
+            </ul>
+          </Card>
+
+          <Card title="Test Cases">
+            {data.currentExercise.testCases.map((tc, i) => (
+              <div key={i} style={{ padding: '12px 0', borderBottom: i < data.currentExercise.testCases.length - 1 ? `1px solid ${colors.border}` : 'none' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 4 }}>
+                  <span style={{ fontSize: 14, fontWeight: 600, color: colors.text }}>Case {tc.id}</span>
+                  <span style={{
+                    fontSize: 11, padding: '2px 8px', borderRadius: 4,
+                    background: {Easy: colors.successDim, Typical: colors.warningDim, Hard: colors.dangerDim}[tc.difficulty],
+                    color: {Easy: colors.success, Typical: colors.warning, Hard: colors.danger}[tc.difficulty]
+                  }}>{tc.difficulty}</span>
+                </div>
+                <p style={{ margin: 0, fontSize: 13, color: colors.textMuted }}>{tc.name}</p>
+              </div>
+            ))}
+          </Card>
+
+          <Card title="Success Criteria" style={{ gridColumn: 'span 2' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 12 }}>
+              {data.currentExercise.successCriteria.map((c, i) => (
+                <div key={i} style={{ padding: 12, background: colors.surfaceHover, borderRadius: 6 }}>
+                  <div style={{ fontSize: 13, fontWeight: 600, color: colors.text, marginBottom: 4 }}>{c.name}</div>
+                  <div style={{ fontSize: 12, color: colors.textMuted }}>{c.desc}</div>
+                </div>
+              ))}
+            </div>
+          </Card>
+
+          <Card title="Key Insight">
+            <p style={{ margin: 0, fontSize: 14, color: colors.text, lineHeight: 1.6 }}>
+              {data.currentExercise.keyInsight}
+            </p>
+          </Card>
+
+          <Card title="Exercise Phases">
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+              {data.currentExercise.phases.map((p, i) => (
+                <div key={i} style={{
+                  display: 'flex', alignItems: 'center', gap: 12,
+                  padding: '8px 12px',
+                  background: p.status === 'next' ? colors.surfaceHover : 'transparent',
+                  borderRadius: 6
+                }}>
+                  <span style={{
+                    width: 24, height: 24, borderRadius: '50%',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    fontSize: 12, fontWeight: 600,
+                    background: p.status === 'completed' ? colors.successDim : p.status === 'next' ? colors.accentDim : colors.border,
+                    color: p.status === 'completed' ? colors.success : p.status === 'next' ? colors.accent : colors.textDim
+                  }}>
+                    {p.status === 'completed' ? '✓' : p.id}
+                  </span>
+                  <span style={{ flex: 1, fontSize: 13, color: colors.text }}>{p.name}</span>
+                  <Badge status={p.status} />
+                </div>
+              ))}
+            </div>
+          </Card>
+        </div>
+      )}
+
+      {activeTab === 'patterns' && (
+        <div>
+          <Card title="Pattern Library">
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: 12 }}>
+              {data.patterns.map((p, i) => (
+                <div key={i} style={{
+                  padding: 16,
+                  background: colors.surfaceHover,
+                  borderRadius: 6,
+                  borderLeft: `3px solid ${p.type === 'prompt' ? colors.accent : p.type === 'architectural' ? colors.purple : colors.success}`
+                }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
+                    <span style={{ fontSize: 14, fontWeight: 600, color: colors.text }}>{p.name}</span>
+                    {p.meta && <span style={{ fontSize: 10, padding: '2px 6px', background: colors.warningDim, color: colors.warning, borderRadius: 3 }}>META</span>}
+                  </div>
+                  <div style={{ display: 'flex', gap: 8 }}>
+                    <span style={{ fontSize: 11, color: colors.textMuted, textTransform: 'uppercase' }}>{p.type}</span>
+                    <Badge status="completed">documented</Badge>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </Card>
+
+          <Card title="Pattern Relationships" style={{ marginTop: 20 }}>
+            <pre style={{ margin: 0, fontSize: 12, color: colors.textMuted, fontFamily: 'JetBrains Mono, monospace', lineHeight: 1.6, overflow: 'auto' }}>
+{`                    ┌─────────────────────────────┐
+                    │  Structured Cross-Examination │
+                    │  (pre-artifact idea testing)  │
+                    └──────────────┬──────────────┘
+                                   │ surfaces claims needing
+                                   ▼ deeper investigation
+                    ┌─────────────────────────────┐
+                    │    Selective Deep Dive       │
+                    │  (triage → targeted analysis)│
+                    └──────────────┬──────────────┘
+                                   │ produces
+                                   ▼ artifact
+                    ┌─────────────────────────────┐
+                    │ Multi-Agent Adversarial Review│
+                    │   (artifact validation)       │
+                    └──────────────┬──────────────┘
+                                   │ critique may need
+                                   ▼ visualization
+                    ┌─────────────────────────────┐
+                    │   Visualization Generator    │
+                    │  (spatial communication)     │
+                    └─────────────────────────────┘`}
+            </pre>
+          </Card>
+        </div>
+      )}
+
+      {activeTab === 'evidence' && (
+        <Card title="Evidence Log">
+          <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 13 }}>
+            <thead>
+              <tr style={{ borderBottom: `2px solid ${colors.border}` }}>
+                <th style={{ textAlign: 'left', padding: '12px 8px', color: colors.textMuted, fontWeight: 600 }}>Date</th>
+                <th style={{ textAlign: 'left', padding: '12px 8px', color: colors.textMuted, fontWeight: 600 }}>Work Done</th>
+                <th style={{ textAlign: 'center', padding: '12px 8px', color: colors.textMuted, fontWeight: 600 }}>Module</th>
+              </tr>
+            </thead>
+            <tbody>
+              {data.evidenceLog.slice().reverse().map((e, i) => (
+                <tr key={i} style={{ borderBottom: `1px solid ${colors.border}` }}>
+                  <td style={{ padding: '12px 8px', color: colors.textDim, fontFamily: 'JetBrains Mono, monospace', fontSize: 12 }}>{e.date}</td>
+                  <td style={{ padding: '12px 8px', color: colors.text }}>{e.work}</td>
+                  <td style={{ padding: '12px 8px', textAlign: 'center' }}>
+                    <span style={{
+                      display: 'inline-flex', width: 24, height: 24, borderRadius: '50%',
+                      alignItems: 'center', justifyContent: 'center',
+                      fontSize: 12, fontWeight: 600,
+                      background: colors.accentDim, color: colors.accent
+                    }}>{e.module}</span>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </Card>
+      )}
+
+      <footer style={{ marginTop: 32, textAlign: 'center', fontSize: 12, color: colors.textDim }}>
+        Last updated: {data.lastUpdated} • Trigger: <code style={{ background: colors.surface, padding: '2px 6px', borderRadius: 4 }}>aicred</code>
+      </footer>
+    </div>
+  );
+}
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(<AICREDDashboard />);
+  </script>
+</body>
+</html>
