@@ -23,8 +23,8 @@ const { useState } = React;
 const data = {
   score: 7.6,
   targetScore: 9.0,
-  progress: 60,
-  lastUpdated: '2025-12-25',
+  progress: 65,
+  lastUpdated: '2025-12-28',
 
   modules: [
     { id: 1, name: 'Your Prompt Pattern Library', status: 'completed' },
@@ -34,37 +34,58 @@ const data = {
     { id: 5, name: 'Mastery & Innovation', status: 'locked' },
   ],
 
+  problemHistory: [
+    {
+      problem: 'Stevens Essay ("The Rage We Forgot to Name")',
+      status: 'abandoned',
+      date: '2025-12-28',
+      reason: 'Too hard — literary close reading not a recurring workflow problem',
+      lesson: 'Module 4 needs problems that recur and can be measured across approaches'
+    },
+    {
+      problem: 'Skill Forge Pattern on Stevens',
+      status: 'rejected',
+      date: '2025-12-28',
+      reason: 'Fails overengineering test — no recurring problem class to amortize deliberation cost',
+      lesson: 'Skill Forge requires problems likely to recur; one-off essays don\'t qualify'
+    },
+    {
+      problem: 'JSX → GitPages Publishing',
+      status: 'active',
+      date: '2025-12-28',
+      reason: 'Recurs (every artifact), measurable, current process unsatisfying',
+      lesson: null
+    }
+  ],
+
   currentExercise: {
     name: 'Three-Approach Test',
-    problem: 'Wallace Stevens essay ("The Rage We Forgot to Name")',
+    problem: 'JSX → GitPages Publishing',
     why: [
-      'Iterated but unsatisfying',
-      'Multiple unresolved objections',
-      'Meta-problem: AI-authored essay hiding authorship',
-      'Ed can judge both literary and technical dimensions'
+      'Recurs every time we have an artifact to publish',
+      'Measurable: does it deploy correctly? Y/N',
+      'Current process unsatisfying — needed manual fixes',
+      'Self-referential: dashboard updates itself as we work'
     ],
     testCases: [
-      { id: 1, name: 'Fix thin LLM technical passage', difficulty: 'Easy', status: 'pending' },
-      { id: 2, name: 'Ground "singer doesn\'t know" claim via close reading', difficulty: 'Typical', status: 'pending' },
-      { id: 3, name: 'Essay as discovery, honest voice, no premature closure', difficulty: 'Hard', status: 'pending' },
+      { id: 1, name: 'Single complex prompt: JSX → HTML → deploy', difficulty: 'Easy', status: 'completed' },
+      { id: 2, name: 'Compound workflow: verify + update data + redeploy', difficulty: 'Typical', status: 'in_progress' },
+      { id: 3, name: 'Novel pattern: template-based with approval gates', difficulty: 'Hard', status: 'pending' },
     ],
     successCriteria: [
-      { name: 'Textual grounding', desc: 'Claims supported by Stevens\'s lines' },
-      { name: 'Close reading technique', desc: 'Attention to language' },
-      { name: 'Prosody', desc: 'Essay\'s own rhythm' },
-      { name: 'Technical accuracy', desc: 'LLM practitioners don\'t object' },
-      { name: 'Literary credibility', desc: 'Poetry critics don\'t object' },
-      { name: 'Honest voice', desc: 'Doesn\'t hide authorship conditions' },
-      { name: 'Argumentative coherence', desc: 'Sound logical structure' },
-      { name: 'No premature closure', desc: 'Holds tensions, resists neat endings' },
-      { name: 'Discovery, not delivery', desc: 'We don\'t know the answer yet' },
+      { name: 'Style preservation', desc: 'All colors, fonts, components intact' },
+      { name: 'Deployment success', desc: 'Live URL returns 200' },
+      { name: 'No manual fixes', desc: 'Works on first try or documents why not' },
+      { name: 'Data currency', desc: 'Dashboard reflects actual current state' },
+      { name: 'Repeatability', desc: 'Can run again on different JSX' },
+      { name: 'Approval gate', desc: 'Human sees preview before deploy' },
     ],
-    keyInsight: 'The essay should be a work of discovery. Stevens called out something real about ordering words. The poet is not the singer. We\'re investigating, not concluding.',
-    fallback: 'If too hard, pivot to audience-specific demo artifacts.',
+    keyInsight: 'The dashboard should reflect reality. If it shows Stevens essay but we\'re doing JSX publishing, it\'s lying. Self-updating artifacts are more honest.',
+    fallback: 'If compound workflow too complex, document the manual steps as a checklist pattern.',
     phases: [
       { id: 1, name: 'Exercise Setup', status: 'completed' },
-      { id: 2, name: 'Single Complex Prompt', status: 'next' },
-      { id: 3, name: 'Compound Workflow', status: 'pending' },
+      { id: 2, name: 'Single Complex Prompt', status: 'completed' },
+      { id: 3, name: 'Compound Workflow', status: 'active' },
       { id: 4, name: 'Novel Pattern', status: 'pending' },
       { id: 5, name: 'Comparison & Framework', status: 'pending' },
     ]
@@ -76,6 +97,11 @@ const data = {
     { date: '2025-12-24', work: 'Selective Deep Dive Pattern documented', module: 3 },
     { date: '2025-12-25', work: 'Module 3 Progress Check completed', module: 3 },
     { date: '2025-12-25', work: 'Module 4 exercise setup: Stevens essay selected', module: 4 },
+    { date: '2025-12-28', work: 'Stevens essay abandoned — not repeatable, fails overengineering test', module: 4 },
+    { date: '2025-12-28', work: 'Skill Forge on Stevens rejected — no recurring problem class', module: 4 },
+    { date: '2025-12-28', work: 'JSX → GitPages selected as Module 4 problem', module: 4 },
+    { date: '2025-12-28', work: 'Phase 2: Single prompt deployed aicred dashboard (1 iteration)', module: 4 },
+    { date: '2025-12-28', work: 'Phase 3: Compound workflow — updating dashboard with problem history', module: 4 },
   ],
 
   patterns: [
@@ -272,6 +298,7 @@ function AICREDDashboard() {
   const tabs = [
     { id: 'overview', label: 'Overview' },
     { id: 'exercise', label: 'Current Exercise' },
+    { id: 'history', label: 'Problem History' },
     { id: 'patterns', label: 'Pattern Index' },
     { id: 'evidence', label: 'Evidence Log' },
   ];
@@ -477,6 +504,86 @@ function AICREDDashboard() {
                   <Badge status={p.status} />
                 </div>
               ))}
+            </div>
+          </Card>
+        </div>
+      )}
+
+      {activeTab === 'history' && (
+        <div style={{ display: 'grid', gap: 20 }}>
+          <Card title="Problem Selection Journey">
+            <p style={{ margin: '0 0 20px 0', fontSize: 14, color: colors.textMuted }}>
+              Module 4 requires a problem that recurs, can be measured, and justifies different approaches.
+              Finding the right problem is part of the exercise.
+            </p>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+              {data.problemHistory.map((p, i) => (
+                <div key={i} style={{
+                  padding: 16,
+                  background: p.status === 'active' ? colors.surfaceHover : colors.surface,
+                  border: `1px solid ${p.status === 'active' ? colors.accent : colors.border}`,
+                  borderRadius: 8,
+                  borderLeft: `4px solid ${
+                    p.status === 'active' ? colors.accent :
+                    p.status === 'abandoned' ? colors.warning :
+                    colors.danger
+                  }`
+                }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 8 }}>
+                    <h4 style={{ margin: 0, fontSize: 15, fontWeight: 600, color: colors.text }}>
+                      {p.problem}
+                    </h4>
+                    <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+                      <span style={{ fontSize: 11, color: colors.textDim, fontFamily: 'JetBrains Mono, monospace' }}>
+                        {p.date}
+                      </span>
+                      <Badge status={
+                        p.status === 'active' ? 'active' :
+                        p.status === 'abandoned' ? 'warn' :
+                        'fail'
+                      }>
+                        {p.status}
+                      </Badge>
+                    </div>
+                  </div>
+                  <p style={{ margin: '0 0 8px 0', fontSize: 13, color: colors.textMuted }}>
+                    <strong style={{ color: colors.text }}>Reason:</strong> {p.reason}
+                  </p>
+                  {p.lesson && (
+                    <p style={{
+                      margin: 0,
+                      fontSize: 12,
+                      color: colors.accent,
+                      padding: '8px 12px',
+                      background: colors.accentDim,
+                      borderRadius: 4,
+                      fontStyle: 'italic'
+                    }}>
+                      Lesson: {p.lesson}
+                    </p>
+                  )}
+                </div>
+              ))}
+            </div>
+          </Card>
+
+          <Card title="Problem Selection Criteria">
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 12 }}>
+              <div style={{ padding: 16, background: colors.surfaceHover, borderRadius: 6 }}>
+                <div style={{ fontSize: 20, marginBottom: 8 }}>🔄</div>
+                <div style={{ fontSize: 13, fontWeight: 600, color: colors.text, marginBottom: 4 }}>Recurrence</div>
+                <div style={{ fontSize: 12, color: colors.textMuted }}>Problem must come up repeatedly to justify pattern investment</div>
+              </div>
+              <div style={{ padding: 16, background: colors.surfaceHover, borderRadius: 6 }}>
+                <div style={{ fontSize: 20, marginBottom: 8 }}>📏</div>
+                <div style={{ fontSize: 13, fontWeight: 600, color: colors.text, marginBottom: 4 }}>Measurability</div>
+                <div style={{ fontSize: 12, color: colors.textMuted }}>Clear success/fail criteria enable approach comparison</div>
+              </div>
+              <div style={{ padding: 16, background: colors.surfaceHover, borderRadius: 6 }}>
+                <div style={{ fontSize: 20, marginBottom: 8 }}>⚖️</div>
+                <div style={{ fontSize: 13, fontWeight: 600, color: colors.text, marginBottom: 4 }}>Amortization</div>
+                <div style={{ fontSize: 12, color: colors.textMuted }}>Upfront complexity cost must pay off over future uses</div>
+              </div>
             </div>
           </Card>
         </div>
