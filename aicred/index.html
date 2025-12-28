@@ -23,71 +23,158 @@ const { useState } = React;
 const data = {
   score: 7.6,
   targetScore: 9.0,
-  progress: 65,
+  progress: 70,
   lastUpdated: '2025-12-28',
 
   modules: [
     { id: 1, name: 'Your Prompt Pattern Library', status: 'completed' },
     { id: 2, name: 'Systematic Prompt Refinement Through Controlled Iteration', status: 'completed' },
     { id: 3, name: 'Pattern Orchestration: Composing Multi-Step Workflows', status: 'completed' },
-    { id: 4, name: 'Pattern Selection: Single vs. Compound Workflows', status: 'active' },
-    { id: 5, name: 'Mastery & Innovation', status: 'locked' },
+    { id: 4, name: 'Pattern Selection: Single vs. Compound Workflows', status: 'completed' },
+    { id: 5, name: 'Pattern Library Health: When to Refactor, Retire, or Rebuild', status: 'active' },
   ],
 
-  problemHistory: [
+  // Pattern library with health metrics for Module 5 audit
+  patterns: [
     {
-      problem: 'Stevens Essay ("The Rage We Forgot to Name")',
-      status: 'abandoned',
-      date: '2025-12-28',
-      reason: 'Too hard — literary close reading not a recurring workflow problem',
-      lesson: 'Module 4 needs problems that recur and can be measured across approaches'
+      name: 'Systematic Prompt Iteration Protocol',
+      type: 'prompt',
+      location: 'patterns/prompt-patterns/',
+      description: 'Baseline → Hypothesis → Minimal Variant → Test → Compare',
+      meta: true,
+      lastUsed: '2025-12-24',
+      monthlyUsesActual: 6,
+      monthlyUsesExpected: 8,
+      cognitiveLoad: 'medium',
+      maintenanceBurden: 3,
+      status: 'stable'
     },
     {
-      problem: 'Skill Forge Pattern on Stevens',
-      status: 'rejected',
-      date: '2025-12-28',
-      reason: 'Fails overengineering test — no recurring problem class to amortize deliberation cost',
-      lesson: 'Skill Forge requires problems likely to recur; one-off essays don\'t qualify'
+      name: 'Selective Deep Dive Pattern',
+      type: 'prompt',
+      location: 'patterns/prompt-patterns/',
+      description: 'Two-pass: classify + triage → conditional deep analysis',
+      lastUsed: '2025-12-28',
+      monthlyUsesActual: 4,
+      monthlyUsesExpected: 5,
+      cognitiveLoad: 'medium',
+      maintenanceBurden: 2,
+      status: 'stable'
     },
     {
-      problem: 'JSX → GitPages Publishing',
-      status: 'active',
-      date: '2025-12-28',
-      reason: 'Recurs (every artifact), measurable, current process unsatisfying',
-      lesson: null
-    }
+      name: 'Multi-Agent Adversarial Review',
+      type: 'prompt',
+      location: 'patterns/prompt-patterns/',
+      description: 'Challenger role → issue/evidence/severity/fix format',
+      lastUsed: '2025-12-20',
+      monthlyUsesActual: 2,
+      monthlyUsesExpected: 4,
+      cognitiveLoad: 'high',
+      maintenanceBurden: 4,
+      status: 'review'
+    },
+    {
+      name: 'Module 4 Decision Framework',
+      type: 'workflow',
+      location: 'Session Briefing',
+      description: '4 heuristics for single vs compound vs novel pattern selection',
+      lastUsed: '2025-12-28',
+      monthlyUsesActual: 1,
+      monthlyUsesExpected: 3,
+      cognitiveLoad: 'low',
+      maintenanceBurden: 1,
+      status: 'new'
+    },
+    {
+      name: 'Canonical Base with Overlays',
+      type: 'architectural',
+      location: 'patterns/',
+      description: 'Single authoritative base → lightweight overlays',
+      lastUsed: '2025-12-14',
+      monthlyUsesActual: 3,
+      monthlyUsesExpected: 3,
+      cognitiveLoad: 'low',
+      maintenanceBurden: 2,
+      status: 'stable'
+    },
+    {
+      name: 'Targeted Artifact Generation',
+      type: 'architectural',
+      location: 'patterns/',
+      description: 'KB context + audience data → bespoke artifact',
+      lastUsed: '2025-12-16',
+      monthlyUsesActual: 2,
+      monthlyUsesExpected: 5,
+      cognitiveLoad: 'high',
+      maintenanceBurden: 5,
+      status: 'review'
+    },
+    {
+      name: 'Skill Forge Pattern',
+      type: 'workflow',
+      location: 'patterns/',
+      description: 'Heterogeneous deliberation → human articulation → reusable skill',
+      lastUsed: '2025-12-28',
+      monthlyUsesActual: 0,
+      monthlyUsesExpected: 2,
+      cognitiveLoad: 'high',
+      maintenanceBurden: 6,
+      status: 'experimental'
+    },
   ],
 
   currentExercise: {
-    name: 'Three-Approach Test',
-    problem: 'JSX → GitPages Publishing',
-    why: [
-      'Recurs every time we have an artifact to publish',
-      'Measurable: does it deploy correctly? Y/N',
-      'Current process unsatisfying — needed manual fixes',
-      'Self-referential: dashboard updates itself as we work'
-    ],
-    testCases: [
-      { id: 1, name: 'Single complex prompt: JSX → HTML → deploy', difficulty: 'Easy', status: 'completed' },
-      { id: 2, name: 'Compound workflow: verify + update data + redeploy', difficulty: 'Typical', status: 'in_progress' },
-      { id: 3, name: 'Novel pattern: template-based with approval gates', difficulty: 'Hard', status: 'pending' },
+    name: 'Pattern Audit: Measuring Health and Planning Retirement',
+    module: 5,
+    estimatedTime: '45 min',
+    focus: 'Patterns evolve, accumulate cruft, and outlive their usefulness. Learn to measure pattern health and retire patterns that no longer earn their cognitive load.',
+    phases: [
+      {
+        id: 1,
+        name: 'Pattern Inventory and Usage Measurement',
+        time: '10 min',
+        status: 'pending',
+        description: 'List every pattern, measure actual vs expected usage, flag mismatches'
+      },
+      {
+        id: 2,
+        name: 'Cognitive Load Measurement',
+        time: '10 min',
+        status: 'pending',
+        description: 'Score each pattern: Low/Medium/High based on explainability and parameters'
+      },
+      {
+        id: 3,
+        name: 'Maintenance Burden Analysis',
+        time: '10 min',
+        status: 'pending',
+        description: 'Calculate: (Failures×2) + Mods + (Deps×3) + Fix time'
+      },
+      {
+        id: 4,
+        name: 'Pattern Triage and Consolidation',
+        time: '10 min',
+        status: 'pending',
+        description: 'Create merge, deprecate, refactor lists with justifications'
+      },
+      {
+        id: 5,
+        name: 'Pattern Lifecycle Policy',
+        time: '5 min',
+        status: 'pending',
+        description: 'Write promotion and retirement rules with numerical thresholds'
+      },
     ],
     successCriteria: [
-      { name: 'Style preservation', desc: 'All colors, fonts, components intact' },
-      { name: 'Deployment success', desc: 'Live URL returns 200' },
-      { name: 'No manual fixes', desc: 'Works on first try or documents why not' },
-      { name: 'Data currency', desc: 'Dashboard reflects actual current state' },
-      { name: 'Repeatability', desc: 'Can run again on different JSX' },
-      { name: 'Approval gate', desc: 'Human sees preview before deploy' },
+      'Health metrics (usage, cognitive load, maintenance burden) for every pattern with numerical scores',
+      'Three triage lists (merge, deprecate, refactor) with specific justifications',
+      'Written lifecycle policy with explicit numerical thresholds',
+      'At least one pattern identified for retirement with lesson learned'
     ],
-    keyInsight: 'The dashboard should reflect reality. If it shows Stevens essay but we\'re doing JSX publishing, it\'s lying. Self-updating artifacts are more honest.',
-    fallback: 'If compound workflow too complex, document the manual steps as a checklist pattern.',
-    phases: [
-      { id: 1, name: 'Exercise Setup', status: 'completed' },
-      { id: 2, name: 'Single Complex Prompt', status: 'completed' },
-      { id: 3, name: 'Compound Workflow', status: 'active' },
-      { id: 4, name: 'Novel Pattern', status: 'pending' },
-      { id: 5, name: 'Comparison & Framework', status: 'pending' },
+    healthDimensions: [
+      { name: 'Cognitive Load', icon: '🧠', desc: 'Mental overhead to use this pattern' },
+      { name: 'Maintenance Burden', icon: '🔧', desc: 'How often it breaks, how hard to fix' },
+      { name: 'Opportunity Cost', icon: '⚖️', desc: 'What could you build instead' },
     ]
   },
 
@@ -96,38 +183,20 @@ const data = {
     { date: '2025-12-24', work: 'Memento classifier: 26% → 100% via structural constraint', module: 2 },
     { date: '2025-12-24', work: 'Selective Deep Dive Pattern documented', module: 3 },
     { date: '2025-12-25', work: 'Module 3 Progress Check completed', module: 3 },
-    { date: '2025-12-25', work: 'Module 4 exercise setup: Stevens essay selected', module: 4 },
-    { date: '2025-12-28', work: 'Stevens essay abandoned — not repeatable, fails overengineering test', module: 4 },
-    { date: '2025-12-28', work: 'Skill Forge on Stevens rejected — no recurring problem class', module: 4 },
-    { date: '2025-12-28', work: 'JSX → GitPages selected as Module 4 problem', module: 4 },
-    { date: '2025-12-28', work: 'Phase 2: Single prompt deployed aicred dashboard (1 iteration)', module: 4 },
-    { date: '2025-12-28', work: 'Phase 3: Compound workflow — updating dashboard with problem history', module: 4 },
+    { date: '2025-12-28', work: 'Three-Approach Test completed (JSX → HTML)', module: 4 },
+    { date: '2025-12-28', work: 'Decision Framework: 4 heuristics documented', module: 4 },
+    { date: '2025-12-28', work: 'Module 4 Progress Check taken', module: 4 },
   ],
 
-  patterns: [
-    { name: 'Systematic Prompt Iteration Protocol', type: 'prompt', status: 'documented', meta: true },
-    { name: 'Selective Deep Dive Pattern', type: 'prompt', status: 'documented' },
-    { name: 'Multi-Agent Adversarial Review Pattern', type: 'prompt', status: 'documented' },
-    { name: 'Structured Cross-Examination Pattern', type: 'prompt', status: 'documented' },
-    { name: 'Visualization Generator Pattern', type: 'prompt', status: 'documented' },
-    { name: 'Canonical Base with Overlays Pattern', type: 'architectural', status: 'documented' },
-    { name: 'Targeted Artifact Generation Pattern', type: 'architectural', status: 'documented' },
-    { name: 'UI Experimentation to Automation Pattern', type: 'workflow', status: 'documented' },
-  ],
-
-  testResult: {
-    artifact: 'The Ordering Imagination v1',
-    verdict: 'Moderately impressed',
-    criteria: [
-      { name: 'Textual grounding', result: 'fail', note: 'Metaphor imposed, not derived' },
-      { name: 'Close reading technique', result: 'fail', note: 'Quoted but didn\'t read' },
-      { name: 'Honest voice', result: 'pass', note: 'Didn\'t hide authorship conditions' },
-      { name: 'Discovery, not delivery', result: 'pass', note: 'Attempted' },
-      { name: 'Technical accuracy', result: 'pass', note: 'No objections raised' },
-      { name: 'Literary credibility', result: 'warn', note: 'Insufficient close reading' },
+  decisionFramework: {
+    title: 'Module 4 Decision Framework',
+    heuristics: [
+      { id: 1, rule: 'Use single prompt when transformation is deterministic and all context is in the input' },
+      { id: 2, rule: 'Use compound workflow when success depends on external context' },
+      { id: 3, rule: 'Use novel pattern when building reusable infrastructure for 10+ uses' },
+      { id: 4, rule: "Don't use prompts when the 'problem' is running commands — that's not a prompt problem" },
     ],
-    learning: 'The literary standard comes first. Technical sophistication without close reading is "AI slop with good architecture."',
-    next: 'v2 should start *in* Stevens\'s language. Do the close reading first.'
+    keyLearning: 'The conversion is a prompt problem. The deployment is not.'
   }
 };
 
@@ -150,6 +219,7 @@ const colors = {
   danger: '#f87171',
   dangerDim: '#991b1b',
   purple: '#a78bfa',
+  purpleDim: '#5b21b6',
 };
 
 // Score ring component
@@ -163,34 +233,15 @@ function ScoreRing({ score, target, size = 140 }) {
   return (
     <div style={{ position: 'relative', width: size, height: size }}>
       <svg width={size} height={size} style={{ transform: 'rotate(-90deg)' }}>
-        <circle
-          cx={size/2} cy={size/2} r={radius}
-          fill="none" stroke={colors.border} strokeWidth={stroke}
-        />
-        <circle
-          cx={size/2} cy={size/2} r={radius}
-          fill="none" stroke={colors.borderLight} strokeWidth={stroke}
-          strokeDasharray={circumference}
-          strokeDashoffset={circumference - targetProgress}
-          strokeLinecap="round"
-          opacity={0.4}
-        />
-        <circle
-          cx={size/2} cy={size/2} r={radius}
-          fill="none" stroke={colors.accent} strokeWidth={stroke}
-          strokeDasharray={circumference}
-          strokeDashoffset={circumference - progress}
-          strokeLinecap="round"
-          style={{ transition: 'stroke-dashoffset 0.8s ease-out' }}
-        />
+        <circle cx={size/2} cy={size/2} r={radius} fill="none" stroke={colors.border} strokeWidth={stroke} />
+        <circle cx={size/2} cy={size/2} r={radius} fill="none" stroke={colors.borderLight} strokeWidth={stroke}
+          strokeDasharray={circumference} strokeDashoffset={circumference - targetProgress} strokeLinecap="round" opacity={0.4} />
+        <circle cx={size/2} cy={size/2} r={radius} fill="none" stroke={colors.accent} strokeWidth={stroke}
+          strokeDasharray={circumference} strokeDashoffset={circumference - progress} strokeLinecap="round"
+          style={{ transition: 'stroke-dashoffset 0.8s ease-out' }} />
       </svg>
-      <div style={{
-        position: 'absolute', top: 0, left: 0, right: 0, bottom: 0,
-        display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center'
-      }}>
-        <span style={{ fontSize: 32, fontWeight: 700, color: colors.text, fontFamily: 'JetBrains Mono, monospace' }}>
-          {score.toFixed(1)}
-        </span>
+      <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+        <span style={{ fontSize: 32, fontWeight: 700, color: colors.text, fontFamily: 'JetBrains Mono, monospace' }}>{score.toFixed(1)}</span>
         <span style={{ fontSize: 12, color: colors.textMuted }}>/ {target}</span>
       </div>
     </div>
@@ -199,21 +250,11 @@ function ScoreRing({ score, target, size = 140 }) {
 
 // Module bar
 function ModuleBar({ modules }) {
-  const getColor = (status) => ({
-    completed: colors.success,
-    active: colors.accent,
-    locked: colors.textDim
-  }[status]);
-
+  const getColor = (status) => ({ completed: colors.success, active: colors.accent, locked: colors.textDim }[status]);
   return (
     <div style={{ display: 'flex', gap: 4, marginBottom: 8 }}>
       {modules.map((m, i) => (
-        <div key={i} style={{
-          flex: 1, height: 6, borderRadius: 3,
-          background: m.status === 'locked' ? colors.border : getColor(m.status),
-          opacity: m.status === 'locked' ? 0.4 : 1,
-          transition: 'all 0.3s ease'
-        }} />
+        <div key={i} style={{ flex: 1, height: 6, borderRadius: 3, background: m.status === 'locked' ? colors.border : getColor(m.status), opacity: m.status === 'locked' ? 0.4 : 1 }} />
       ))}
     </div>
   );
@@ -226,23 +267,19 @@ function Badge({ status, children }) {
     active: { bg: colors.accentDim, color: colors.accent },
     locked: { bg: colors.border, color: colors.textDim },
     pending: { bg: colors.border, color: colors.textMuted },
-    next: { bg: colors.accentDim, color: colors.accent },
-    pass: { bg: colors.successDim, color: colors.success },
-    fail: { bg: colors.dangerDim, color: colors.danger },
-    warn: { bg: colors.warningDim, color: colors.warning },
+    stable: { bg: colors.successDim, color: colors.success },
+    review: { bg: colors.warningDim, color: colors.warning },
+    experimental: { bg: colors.purpleDim, color: colors.purple },
+    new: { bg: colors.accentDim, color: colors.accent },
+    low: { bg: colors.successDim, color: colors.success },
+    medium: { bg: colors.warningDim, color: colors.warning },
+    high: { bg: colors.dangerDim, color: colors.danger },
   };
   const s = styles[status] || styles.pending;
-
   return (
-    <span style={{
-      display: 'inline-flex', alignItems: 'center', gap: 4,
-      padding: '3px 8px', borderRadius: 4, fontSize: 11, fontWeight: 600,
-      background: s.bg, color: s.color, textTransform: 'uppercase', letterSpacing: '0.02em'
-    }}>
-      {status === 'completed' && '✓ '}
-      {status === 'active' && '● '}
-      {status === 'locked' && '🔒 '}
-      {children || status}
+    <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4, padding: '3px 8px', borderRadius: 4, fontSize: 11, fontWeight: 600,
+      background: s.bg, color: s.color, textTransform: 'uppercase', letterSpacing: '0.02em' }}>
+      {status === 'completed' && '✓ '}{status === 'active' && '● '}{status === 'locked' && '🔒 '}{children || status}
     </span>
   );
 }
@@ -250,13 +287,7 @@ function Badge({ status, children }) {
 // Card component
 function Card({ title, children, style }) {
   return (
-    <div style={{
-      background: colors.surface,
-      border: `1px solid ${colors.border}`,
-      borderRadius: 8,
-      padding: 20,
-      ...style
-    }}>
+    <div style={{ background: colors.surface, border: `1px solid ${colors.border}`, borderRadius: 8, padding: 20, ...style }}>
       {title && <h3 style={{ margin: '0 0 16px 0', fontSize: 13, fontWeight: 600, color: colors.textMuted, textTransform: 'uppercase', letterSpacing: '0.05em' }}>{title}</h3>}
       {children}
     </div>
@@ -268,22 +299,12 @@ function Tabs({ tabs, active, onChange }) {
   return (
     <div style={{ display: 'flex', gap: 2, marginBottom: 20, borderBottom: `1px solid ${colors.border}`, paddingBottom: 1 }}>
       {tabs.map(t => (
-        <button
-          key={t.id}
-          onClick={() => onChange(t.id)}
-          style={{
-            background: active === t.id ? colors.surfaceHover : 'transparent',
-            border: 'none',
-            borderBottom: active === t.id ? `2px solid ${colors.accent}` : '2px solid transparent',
-            padding: '10px 16px',
-            color: active === t.id ? colors.text : colors.textMuted,
-            cursor: 'pointer',
-            fontSize: 13,
-            fontWeight: 500,
-            transition: 'all 0.2s ease',
-            marginBottom: -2
-          }}
-        >
+        <button key={t.id} onClick={() => onChange(t.id)} style={{
+          background: active === t.id ? colors.surfaceHover : 'transparent',
+          border: 'none', borderBottom: active === t.id ? `2px solid ${colors.accent}` : '2px solid transparent',
+          padding: '10px 16px', color: active === t.id ? colors.text : colors.textMuted, cursor: 'pointer',
+          fontSize: 13, fontWeight: 500, marginBottom: -2
+        }}>
           {t.label}
         </button>
       ))}
@@ -291,37 +312,98 @@ function Tabs({ tabs, active, onChange }) {
   );
 }
 
-// Main dashboard
-function AICREDDashboard() {
-  const [activeTab, setActiveTab] = useState('overview');
-
-  const tabs = [
-    { id: 'overview', label: 'Overview' },
-    { id: 'exercise', label: 'Current Exercise' },
-    { id: 'history', label: 'Problem History' },
-    { id: 'patterns', label: 'Pattern Index' },
-    { id: 'evidence', label: 'Evidence Log' },
-  ];
+// Pattern Card component
+function PatternCard({ pattern }) {
+  const typeColors = { prompt: colors.accent, architectural: colors.purple, workflow: colors.success };
+  const usageMismatch = pattern.monthlyUsesActual < pattern.monthlyUsesExpected / 2;
 
   return (
     <div style={{
-      minHeight: '100vh',
-      background: colors.bg,
-      color: colors.text,
-      fontFamily: '"Source Sans 3", -apple-system, sans-serif',
-      padding: 24
+      padding: 16, background: colors.surfaceHover, borderRadius: 8,
+      borderLeft: `4px solid ${typeColors[pattern.type] || colors.accent}`,
+      display: 'flex', flexDirection: 'column', gap: 12
     }}>
+      <div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
+          <span style={{ fontSize: 14, fontWeight: 600, color: colors.text }}>{pattern.name}</span>
+          {pattern.meta && <span style={{ fontSize: 10, padding: '2px 6px', background: colors.warningDim, color: colors.warning, borderRadius: 3 }}>META</span>}
+        </div>
+        <p style={{ margin: 0, fontSize: 12, color: colors.textMuted }}>{pattern.description}</p>
+      </div>
+
+      <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+        <Badge status={pattern.status}>{pattern.status}</Badge>
+        <Badge status={pattern.cognitiveLoad}>{pattern.cognitiveLoad} load</Badge>
+      </div>
+
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 8, fontSize: 11 }}>
+        <div>
+          <div style={{ color: colors.textDim }}>Last used</div>
+          <div style={{ color: colors.text, fontFamily: 'JetBrains Mono, monospace' }}>{pattern.lastUsed}</div>
+        </div>
+        <div>
+          <div style={{ color: colors.textDim }}>Uses/mo</div>
+          <div style={{ color: usageMismatch ? colors.warning : colors.text }}>
+            {pattern.monthlyUsesActual}/{pattern.monthlyUsesExpected}
+            {usageMismatch && ' ⚠'}
+          </div>
+        </div>
+        <div>
+          <div style={{ color: colors.textDim }}>Burden</div>
+          <div style={{ color: pattern.maintenanceBurden > 4 ? colors.warning : colors.text }}>{pattern.maintenanceBurden}</div>
+        </div>
+      </div>
+
+      <div style={{ fontSize: 11, color: colors.textDim, fontFamily: 'JetBrains Mono, monospace' }}>
+        {pattern.location}
+      </div>
+    </div>
+  );
+}
+
+// Resume with Claude component
+function ResumeWithClaude() {
+  return (
+    <div style={{
+      marginTop: 24, padding: 20, background: colors.surface, border: `1px solid ${colors.accentDim}`,
+      borderRadius: 8, display: 'flex', alignItems: 'center', gap: 16
+    }}>
+      <div style={{ fontSize: 32 }}>💬</div>
+      <div style={{ flex: 1 }}>
+        <h4 style={{ margin: '0 0 4px 0', fontSize: 14, fontWeight: 600, color: colors.text }}>Resume with Claude</h4>
+        <p style={{ margin: 0, fontSize: 13, color: colors.textMuted }}>
+          Say <code style={{ background: colors.bg, padding: '2px 8px', borderRadius: 4, color: colors.accent, fontFamily: 'JetBrains Mono, monospace' }}>aicred</code> in Claude Code to load full context from the Session Briefing and continue where you left off.
+        </p>
+      </div>
+      <div style={{ textAlign: 'right', fontSize: 11, color: colors.textDim }}>
+        <div>Session Briefing</div>
+        <div style={{ fontFamily: 'JetBrains Mono, monospace' }}>projects/aicred/</div>
+      </div>
+    </div>
+  );
+}
+
+// Main dashboard
+function AICREDDashboard() {
+  const [activeTab, setActiveTab] = useState('overview');
+  const tabs = [
+    { id: 'overview', label: 'Overview' },
+    { id: 'exercise', label: 'Current Exercise' },
+    { id: 'patterns', label: 'Pattern Library' },
+    { id: 'evidence', label: 'Evidence Log' },
+  ];
+
+  const activeModule = data.modules.find(m => m.status === 'active');
+
+  return (
+    <div style={{ minHeight: '100vh', background: colors.bg, color: colors.text, fontFamily: '"Source Sans 3", -apple-system, sans-serif', padding: 24 }}>
       {/* Header */}
       <header style={{ marginBottom: 32 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 8 }}>
-          <h1 style={{ margin: 0, fontSize: 24, fontWeight: 700, letterSpacing: '-0.02em' }}>
-            AI CRED
-          </h1>
-          <Badge status="active">Module 4</Badge>
+          <h1 style={{ margin: 0, fontSize: 24, fontWeight: 700, letterSpacing: '-0.02em' }}>AI CRED</h1>
+          <Badge status="active">Module {activeModule?.id}</Badge>
         </div>
-        <p style={{ margin: 0, color: colors.textMuted, fontSize: 14 }}>
-          Pattern Selection: Single vs. Compound Workflows
-        </p>
+        <p style={{ margin: 0, color: colors.textMuted, fontSize: 14 }}>{activeModule?.name}</p>
       </header>
 
       <Tabs tabs={tabs} active={activeTab} onChange={setActiveTab} />
@@ -348,332 +430,162 @@ function AICREDDashboard() {
             <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
               {data.modules.map((m, i) => (
                 <div key={i} style={{
-                  display: 'flex', alignItems: 'center', gap: 12,
-                  padding: '8px 12px',
-                  background: m.status === 'active' ? colors.surfaceHover : 'transparent',
-                  borderRadius: 6,
+                  display: 'flex', alignItems: 'center', gap: 12, padding: '8px 12px',
+                  background: m.status === 'active' ? colors.surfaceHover : 'transparent', borderRadius: 6,
                   borderLeft: m.status === 'active' ? `3px solid ${colors.accent}` : '3px solid transparent'
                 }}>
                   <span style={{
-                    width: 24, height: 24, borderRadius: '50%',
-                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    width: 24, height: 24, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center',
                     fontSize: 12, fontWeight: 600,
                     background: m.status === 'completed' ? colors.successDim : m.status === 'active' ? colors.accentDim : colors.border,
                     color: m.status === 'completed' ? colors.success : m.status === 'active' ? colors.accent : colors.textDim
                   }}>
                     {m.status === 'completed' ? '✓' : m.id}
                   </span>
-                  <span style={{
-                    flex: 1, fontSize: 13,
-                    color: m.status === 'locked' ? colors.textDim : colors.text
-                  }}>
-                    {m.name}
-                  </span>
+                  <span style={{ flex: 1, fontSize: 13, color: m.status === 'locked' ? colors.textDim : colors.text }}>{m.name}</span>
                   <Badge status={m.status} />
                 </div>
               ))}
             </div>
           </Card>
 
-          {/* Current Exercise Summary */}
-          <Card title="Current Exercise" style={{ gridColumn: 'span 2' }}>
-            <div style={{ display: 'flex', gap: 24 }}>
-              <div style={{ flex: 1 }}>
-                <h4 style={{ margin: '0 0 4px 0', fontSize: 18, fontWeight: 600, color: colors.text }}>
-                  {data.currentExercise.name}
-                </h4>
-                <p style={{ margin: '0 0 16px 0', fontSize: 14, color: colors.textMuted }}>
-                  {data.currentExercise.problem}
-                </p>
-                <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-                  {data.currentExercise.phases.map((p, i) => (
-                    <Badge key={i} status={p.status}>{p.name}</Badge>
-                  ))}
+          {/* Decision Framework from Module 4 */}
+          <Card title="Module 4 Deliverable: Decision Framework" style={{ gridColumn: 'span 2' }}>
+            <div style={{ marginBottom: 16 }}>
+              {data.decisionFramework.heuristics.map((h, i) => (
+                <div key={i} style={{ display: 'flex', gap: 12, padding: '10px 0', borderBottom: i < 3 ? `1px solid ${colors.border}` : 'none' }}>
+                  <span style={{
+                    width: 24, height: 24, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    fontSize: 12, fontWeight: 600, background: colors.accentDim, color: colors.accent, flexShrink: 0
+                  }}>{h.id}</span>
+                  <span style={{ fontSize: 13, color: colors.text }}>{h.rule}</span>
                 </div>
-              </div>
-              <div style={{ width: 200 }}>
-                <div style={{ fontSize: 12, color: colors.textMuted, marginBottom: 8 }}>Test Cases</div>
-                {data.currentExercise.testCases.map((tc, i) => (
-                  <div key={i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '6px 0', borderBottom: `1px solid ${colors.border}` }}>
-                    <span style={{ fontSize: 13, color: colors.text }}>Case {tc.id}</span>
-                    <span style={{ fontSize: 11, color: {Easy: colors.success, Typical: colors.warning, Hard: colors.danger}[tc.difficulty] }}>{tc.difficulty}</span>
-                  </div>
-                ))}
-              </div>
+              ))}
+            </div>
+            <div style={{ padding: 12, background: colors.surfaceHover, borderRadius: 6, borderLeft: `3px solid ${colors.accent}` }}>
+              <span style={{ fontSize: 12, color: colors.textMuted }}>Key Learning: </span>
+              <span style={{ fontSize: 13, color: colors.text, fontWeight: 500 }}>{data.decisionFramework.keyLearning}</span>
             </div>
           </Card>
 
-          {/* Test Result */}
-          {data.testResult && (
-            <Card title="Latest Test Result" style={{ gridColumn: 'span 2' }}>
-              <div style={{ display: 'flex', gap: 24 }}>
-                <div style={{ flex: 1 }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 12 }}>
-                    <h4 style={{ margin: 0, fontSize: 16, fontWeight: 600, color: colors.text }}>
-                      {data.testResult.artifact}
-                    </h4>
-                    <Badge status="warn">{data.testResult.verdict}</Badge>
-                  </div>
-                  <p style={{ margin: '0 0 12px 0', fontSize: 13, color: colors.textMuted, fontStyle: 'italic' }}>
-                    "{data.testResult.learning}"
-                  </p>
-                  <p style={{ margin: 0, fontSize: 12, color: colors.accent }}>
-                    → {data.testResult.next}
-                  </p>
-                </div>
-                <div style={{ width: 280 }}>
-                  <div style={{ fontSize: 12, color: colors.textMuted, marginBottom: 8 }}>Criteria Results</div>
-                  {data.testResult.criteria.map((c, i) => (
-                    <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '4px 0' }}>
-                      <span style={{ width: 16, textAlign: 'center' }}>
-                        {c.result === 'pass' ? '✓' : c.result === 'fail' ? '✗' : '⚠'}
-                      </span>
-                      <span style={{ flex: 1, fontSize: 12, color: colors.textMuted }}>{c.name}</span>
-                      <Badge status={c.result}>{c.result}</Badge>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </Card>
-          )}
+          <ResumeWithClaude />
         </div>
       )}
 
       {activeTab === 'exercise' && (
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20 }}>
-          <Card title="Problem Context">
-            <h4 style={{ margin: '0 0 12px 0', fontSize: 16, color: colors.text }}>{data.currentExercise.problem}</h4>
-            <div style={{ fontSize: 12, color: colors.textMuted, marginBottom: 8 }}>Why this problem:</div>
-            <ul style={{ margin: 0, paddingLeft: 20, fontSize: 13, color: colors.textMuted }}>
-              {data.currentExercise.why.map((w, i) => <li key={i} style={{ marginBottom: 4 }}>{w}</li>)}
-            </ul>
-          </Card>
-
-          <Card title="Test Cases">
-            {data.currentExercise.testCases.map((tc, i) => (
-              <div key={i} style={{ padding: '12px 0', borderBottom: i < data.currentExercise.testCases.length - 1 ? `1px solid ${colors.border}` : 'none' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 4 }}>
-                  <span style={{ fontSize: 14, fontWeight: 600, color: colors.text }}>Case {tc.id}</span>
-                  <span style={{
-                    fontSize: 11, padding: '2px 8px', borderRadius: 4,
-                    background: {Easy: colors.successDim, Typical: colors.warningDim, Hard: colors.dangerDim}[tc.difficulty],
-                    color: {Easy: colors.success, Typical: colors.warning, Hard: colors.danger}[tc.difficulty]
-                  }}>{tc.difficulty}</span>
-                </div>
-                <p style={{ margin: 0, fontSize: 13, color: colors.textMuted }}>{tc.name}</p>
-              </div>
-            ))}
-          </Card>
-
-          <Card title="Success Criteria" style={{ gridColumn: 'span 2' }}>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 12 }}>
-              {data.currentExercise.successCriteria.map((c, i) => (
-                <div key={i} style={{ padding: 12, background: colors.surfaceHover, borderRadius: 6 }}>
-                  <div style={{ fontSize: 13, fontWeight: 600, color: colors.text, marginBottom: 4 }}>{c.name}</div>
-                  <div style={{ fontSize: 12, color: colors.textMuted }}>{c.desc}</div>
-                </div>
-              ))}
+          <Card title="Module 5 Exercise" style={{ gridColumn: 'span 2' }}>
+            <h4 style={{ margin: '0 0 8px 0', fontSize: 18, color: colors.text }}>{data.currentExercise.name}</h4>
+            <p style={{ margin: '0 0 16px 0', fontSize: 14, color: colors.textMuted }}>{data.currentExercise.focus}</p>
+            <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+              <span style={{ fontSize: 12, color: colors.textDim }}>Estimated time:</span>
+              <span style={{ fontSize: 13, color: colors.text, fontWeight: 600 }}>{data.currentExercise.estimatedTime}</span>
             </div>
           </Card>
 
-          <Card title="Key Insight">
-            <p style={{ margin: 0, fontSize: 14, color: colors.text, lineHeight: 1.6 }}>
-              {data.currentExercise.keyInsight}
-            </p>
+          <Card title="Three Health Dimensions">
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+              {data.currentExercise.healthDimensions.map((d, i) => (
+                <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: 12, background: colors.surfaceHover, borderRadius: 6 }}>
+                  <span style={{ fontSize: 24 }}>{d.icon}</span>
+                  <div>
+                    <div style={{ fontSize: 14, fontWeight: 600, color: colors.text }}>{d.name}</div>
+                    <div style={{ fontSize: 12, color: colors.textMuted }}>{d.desc}</div>
+                  </div>
+                </div>
+              ))}
+            </div>
           </Card>
 
           <Card title="Exercise Phases">
             <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
               {data.currentExercise.phases.map((p, i) => (
-                <div key={i} style={{
-                  display: 'flex', alignItems: 'center', gap: 12,
-                  padding: '8px 12px',
-                  background: p.status === 'next' ? colors.surfaceHover : 'transparent',
-                  borderRadius: 6
-                }}>
-                  <span style={{
-                    width: 24, height: 24, borderRadius: '50%',
-                    display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    fontSize: 12, fontWeight: 600,
-                    background: p.status === 'completed' ? colors.successDim : p.status === 'next' ? colors.accentDim : colors.border,
-                    color: p.status === 'completed' ? colors.success : p.status === 'next' ? colors.accent : colors.textDim
-                  }}>
-                    {p.status === 'completed' ? '✓' : p.id}
-                  </span>
-                  <span style={{ flex: 1, fontSize: 13, color: colors.text }}>{p.name}</span>
-                  <Badge status={p.status} />
-                </div>
-              ))}
-            </div>
-          </Card>
-        </div>
-      )}
-
-      {activeTab === 'history' && (
-        <div style={{ display: 'grid', gap: 20 }}>
-          <Card title="Problem Selection Journey">
-            <p style={{ margin: '0 0 20px 0', fontSize: 14, color: colors.textMuted }}>
-              Module 4 requires a problem that recurs, can be measured, and justifies different approaches.
-              Finding the right problem is part of the exercise.
-            </p>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-              {data.problemHistory.map((p, i) => (
-                <div key={i} style={{
-                  padding: 16,
-                  background: p.status === 'active' ? colors.surfaceHover : colors.surface,
-                  border: `1px solid ${p.status === 'active' ? colors.accent : colors.border}`,
-                  borderRadius: 8,
-                  borderLeft: `4px solid ${
-                    p.status === 'active' ? colors.accent :
-                    p.status === 'abandoned' ? colors.warning :
-                    colors.danger
-                  }`
-                }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 8 }}>
-                    <h4 style={{ margin: 0, fontSize: 15, fontWeight: 600, color: colors.text }}>
-                      {p.problem}
-                    </h4>
-                    <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
-                      <span style={{ fontSize: 11, color: colors.textDim, fontFamily: 'JetBrains Mono, monospace' }}>
-                        {p.date}
-                      </span>
-                      <Badge status={
-                        p.status === 'active' ? 'active' :
-                        p.status === 'abandoned' ? 'warn' :
-                        'fail'
-                      }>
-                        {p.status}
-                      </Badge>
-                    </div>
+                <div key={i} style={{ padding: '12px', background: colors.surfaceHover, borderRadius: 6, borderLeft: `3px solid ${p.status === 'completed' ? colors.success : p.status === 'active' ? colors.accent : colors.border}` }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 4 }}>
+                    <span style={{ fontSize: 13, fontWeight: 600, color: colors.text }}>Phase {p.id}: {p.name}</span>
+                    <span style={{ fontSize: 11, color: colors.textDim }}>{p.time}</span>
                   </div>
-                  <p style={{ margin: '0 0 8px 0', fontSize: 13, color: colors.textMuted }}>
-                    <strong style={{ color: colors.text }}>Reason:</strong> {p.reason}
-                  </p>
-                  {p.lesson && (
-                    <p style={{
-                      margin: 0,
-                      fontSize: 12,
-                      color: colors.accent,
-                      padding: '8px 12px',
-                      background: colors.accentDim,
-                      borderRadius: 4,
-                      fontStyle: 'italic'
-                    }}>
-                      Lesson: {p.lesson}
-                    </p>
-                  )}
+                  <p style={{ margin: 0, fontSize: 12, color: colors.textMuted }}>{p.description}</p>
                 </div>
               ))}
             </div>
           </Card>
 
-          <Card title="Problem Selection Criteria">
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 12 }}>
-              <div style={{ padding: 16, background: colors.surfaceHover, borderRadius: 6 }}>
-                <div style={{ fontSize: 20, marginBottom: 8 }}>🔄</div>
-                <div style={{ fontSize: 13, fontWeight: 600, color: colors.text, marginBottom: 4 }}>Recurrence</div>
-                <div style={{ fontSize: 12, color: colors.textMuted }}>Problem must come up repeatedly to justify pattern investment</div>
-              </div>
-              <div style={{ padding: 16, background: colors.surfaceHover, borderRadius: 6 }}>
-                <div style={{ fontSize: 20, marginBottom: 8 }}>📏</div>
-                <div style={{ fontSize: 13, fontWeight: 600, color: colors.text, marginBottom: 4 }}>Measurability</div>
-                <div style={{ fontSize: 12, color: colors.textMuted }}>Clear success/fail criteria enable approach comparison</div>
-              </div>
-              <div style={{ padding: 16, background: colors.surfaceHover, borderRadius: 6 }}>
-                <div style={{ fontSize: 20, marginBottom: 8 }}>⚖️</div>
-                <div style={{ fontSize: 13, fontWeight: 600, color: colors.text, marginBottom: 4 }}>Amortization</div>
-                <div style={{ fontSize: 12, color: colors.textMuted }}>Upfront complexity cost must pay off over future uses</div>
-              </div>
+          <Card title="Success Criteria" style={{ gridColumn: 'span 2' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 12 }}>
+              {data.currentExercise.successCriteria.map((c, i) => (
+                <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: 8, padding: 12, background: colors.surfaceHover, borderRadius: 6 }}>
+                  <span style={{ color: colors.textDim, fontSize: 14 }}>☐</span>
+                  <span style={{ fontSize: 13, color: colors.text }}>{c}</span>
+                </div>
+              ))}
             </div>
           </Card>
+
+          <ResumeWithClaude />
         </div>
       )}
 
       {activeTab === 'patterns' && (
         <div>
-          <Card title="Pattern Library">
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: 12 }}>
-              {data.patterns.map((p, i) => (
-                <div key={i} style={{
-                  padding: 16,
-                  background: colors.surfaceHover,
-                  borderRadius: 6,
-                  borderLeft: `3px solid ${p.type === 'prompt' ? colors.accent : p.type === 'architectural' ? colors.purple : colors.success}`
-                }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
-                    <span style={{ fontSize: 14, fontWeight: 600, color: colors.text }}>{p.name}</span>
-                    {p.meta && <span style={{ fontSize: 10, padding: '2px 6px', background: colors.warningDim, color: colors.warning, borderRadius: 3 }}>META</span>}
-                  </div>
-                  <div style={{ display: 'flex', gap: 8 }}>
-                    <span style={{ fontSize: 11, color: colors.textMuted, textTransform: 'uppercase' }}>{p.type}</span>
-                    <Badge status="completed">documented</Badge>
-                  </div>
-                </div>
-              ))}
+          <Card title="Pattern Library with Health Metrics" style={{ marginBottom: 20 }}>
+            <p style={{ margin: '0 0 20px 0', fontSize: 13, color: colors.textMuted }}>
+              Each pattern shows usage stats, cognitive load score, and maintenance burden for the Module 5 audit.
+              Patterns with ⚠ have usage mismatch (actual &lt; expected/2).
+            </p>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(340px, 1fr))', gap: 16 }}>
+              {data.patterns.map((p, i) => <PatternCard key={i} pattern={p} />)}
             </div>
           </Card>
 
-          <Card title="Pattern Relationships" style={{ marginTop: 20 }}>
-            <pre style={{ margin: 0, fontSize: 12, color: colors.textMuted, fontFamily: 'JetBrains Mono, monospace', lineHeight: 1.6, overflow: 'auto' }}>
-{`                    ┌─────────────────────────────┐
-                    │  Structured Cross-Examination │
-                    │  (pre-artifact idea testing)  │
-                    └──────────────┬──────────────┘
-                                   │ surfaces claims needing
-                                   ▼ deeper investigation
-                    ┌─────────────────────────────┐
-                    │    Selective Deep Dive       │
-                    │  (triage → targeted analysis)│
-                    └──────────────┬──────────────┘
-                                   │ produces
-                                   ▼ artifact
-                    ┌─────────────────────────────┐
-                    │ Multi-Agent Adversarial Review│
-                    │   (artifact validation)       │
-                    └──────────────┬──────────────┘
-                                   │ critique may need
-                                   ▼ visualization
-                    ┌─────────────────────────────┐
-                    │   Visualization Generator    │
-                    │  (spatial communication)     │
-                    └─────────────────────────────┘`}
-            </pre>
+          <Card title="Pattern Status Legend">
+            <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}><Badge status="stable">stable</Badge><span style={{ fontSize: 12, color: colors.textMuted }}>Production ready</span></div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}><Badge status="review">review</Badge><span style={{ fontSize: 12, color: colors.textMuted }}>Needs evaluation</span></div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}><Badge status="experimental">experimental</Badge><span style={{ fontSize: 12, color: colors.textMuted }}>Not yet validated</span></div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}><Badge status="new">new</Badge><span style={{ fontSize: 12, color: colors.textMuted }}>Recently created</span></div>
+            </div>
           </Card>
+
+          <ResumeWithClaude />
         </div>
       )}
 
       {activeTab === 'evidence' && (
-        <Card title="Evidence Log">
-          <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 13 }}>
-            <thead>
-              <tr style={{ borderBottom: `2px solid ${colors.border}` }}>
-                <th style={{ textAlign: 'left', padding: '12px 8px', color: colors.textMuted, fontWeight: 600 }}>Date</th>
-                <th style={{ textAlign: 'left', padding: '12px 8px', color: colors.textMuted, fontWeight: 600 }}>Work Done</th>
-                <th style={{ textAlign: 'center', padding: '12px 8px', color: colors.textMuted, fontWeight: 600 }}>Module</th>
-              </tr>
-            </thead>
-            <tbody>
-              {data.evidenceLog.slice().reverse().map((e, i) => (
-                <tr key={i} style={{ borderBottom: `1px solid ${colors.border}` }}>
-                  <td style={{ padding: '12px 8px', color: colors.textDim, fontFamily: 'JetBrains Mono, monospace', fontSize: 12 }}>{e.date}</td>
-                  <td style={{ padding: '12px 8px', color: colors.text }}>{e.work}</td>
-                  <td style={{ padding: '12px 8px', textAlign: 'center' }}>
-                    <span style={{
-                      display: 'inline-flex', width: 24, height: 24, borderRadius: '50%',
-                      alignItems: 'center', justifyContent: 'center',
-                      fontSize: 12, fontWeight: 600,
-                      background: colors.accentDim, color: colors.accent
-                    }}>{e.module}</span>
-                  </td>
+        <div>
+          <Card title="Evidence Log (for Progress Checks)">
+            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 13 }}>
+              <thead>
+                <tr style={{ borderBottom: `2px solid ${colors.border}` }}>
+                  <th style={{ textAlign: 'left', padding: '12px 8px', color: colors.textMuted, fontWeight: 600 }}>Date</th>
+                  <th style={{ textAlign: 'left', padding: '12px 8px', color: colors.textMuted, fontWeight: 600 }}>Work Done</th>
+                  <th style={{ textAlign: 'center', padding: '12px 8px', color: colors.textMuted, fontWeight: 600 }}>Module</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </Card>
+              </thead>
+              <tbody>
+                {data.evidenceLog.slice().reverse().map((e, i) => (
+                  <tr key={i} style={{ borderBottom: `1px solid ${colors.border}` }}>
+                    <td style={{ padding: '12px 8px', color: colors.textDim, fontFamily: 'JetBrains Mono, monospace', fontSize: 12 }}>{e.date}</td>
+                    <td style={{ padding: '12px 8px', color: colors.text }}>{e.work}</td>
+                    <td style={{ padding: '12px 8px', textAlign: 'center' }}>
+                      <span style={{
+                        display: 'inline-flex', width: 24, height: 24, borderRadius: '50%',
+                        alignItems: 'center', justifyContent: 'center', fontSize: 12, fontWeight: 600,
+                        background: colors.accentDim, color: colors.accent
+                      }}>{e.module}</span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </Card>
+
+          <ResumeWithClaude />
+        </div>
       )}
 
       <footer style={{ marginTop: 32, textAlign: 'center', fontSize: 12, color: colors.textDim }}>
-        Last updated: {data.lastUpdated} • Trigger: <code style={{ background: colors.surface, padding: '2px 6px', borderRadius: 4 }}>aicred</code>
+        Last updated: {data.lastUpdated} • <a href="https://aicred.ai" target="_blank" rel="noopener" style={{ color: colors.accent, textDecoration: 'none' }}>aicred.ai</a>
       </footer>
     </div>
   );
