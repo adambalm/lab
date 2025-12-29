@@ -95,6 +95,30 @@ const fallbackPatterns = [
   }
 ];
 
+// AI Fluency Score from aicred.ai (manually updated after assessments)
+const fluencyScore = {
+  current: 9.1,
+  previous: 7.6,
+  tier: 'HIGH VELOCITY',
+  lastUpdated: '2025-12-29',
+  evaluations: 1,
+  components: {
+    promptMastery: 8.2,
+    technicalUnderstanding: 8.5,
+    practicalApplication: 8.4,
+    criticalEvaluation: 8.8,
+    workflowDesign: 8.6
+  },
+  // Map components to dashboard work for "living story" connection
+  componentConnections: {
+    promptMastery: 'Pattern library depth, prompt refinement (Systematic Iteration Protocol)',
+    technicalUnderstanding: 'Understanding model behavior, structural constraints beat verbal emphasis',
+    practicalApplication: 'Problems solved: Memento classifier, JSX conversion',
+    criticalEvaluation: 'Module 5 pattern audit, health metrics, deprecation decisions',
+    workflowDesign: 'Compound workflows, Selective Deep Dive, pass1Guidance refactor'
+  }
+};
+
 // Pattern health metrics for Module 5 audit (separate concern)
 const patternHealthMetrics = {
   'selective-deep-dive': { lastUsed: '2025-12-28', monthlyUsesActual: 4, monthlyUsesExpected: 5, cognitiveLoad: 'medium', maintenanceBurden: 2 },
@@ -520,17 +544,57 @@ function AICREDDashboard() {
       {/* OVERVIEW TAB */}
       {activeTab === 'overview' && (
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 20 }}>
-          <Card title="Progress">
-            <div style={{ display: 'flex', alignItems: 'center', gap: 24 }}>
-              <ScoreRing score={7.6} target={9.0} />
-              <div>
-                <div style={{ fontSize: 24, fontWeight: 700, marginBottom: 4 }}>70%</div>
-                <div style={{ fontSize: 12, color: colors.textDim }}>{modules.filter(m => m.status === 'completed').length} of {modules.length} modules</div>
+          {/* AI Fluency Score Hero */}
+          <Card title="AI Fluency Score" style={{ gridColumn: 'span 2' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 32, flexWrap: 'wrap' }}>
+              <div style={{ textAlign: 'center' }}>
+                <div style={{ fontSize: 56, fontWeight: 700, color: colors.accent }}>{fluencyScore.current}</div>
+                <div style={{ fontSize: 11, padding: '4px 12px', background: colors.successDim, color: colors.success, borderRadius: 12, display: 'inline-block', fontWeight: 600 }}>{fluencyScore.tier}</div>
+              </div>
+              <div style={{ flex: 1, minWidth: 200 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
+                  <span style={{ fontSize: 13, color: colors.textMuted }}>Previous: {fluencyScore.previous}</span>
+                  <span style={{ fontSize: 13, padding: '2px 8px', background: colors.successDim, color: colors.success, borderRadius: 8, fontWeight: 600 }}>+{(fluencyScore.current - fluencyScore.previous).toFixed(1)}</span>
+                </div>
+                <div style={{ fontSize: 12, color: colors.textDim }}>
+                  {fluencyScore.evaluations} evaluation{fluencyScore.evaluations !== 1 ? 's' : ''} completed · Updated {fluencyScore.lastUpdated}
+                </div>
               </div>
             </div>
           </Card>
 
+          {/* Component Breakdown */}
+          <Card title="Component Breakdown">
+            {Object.entries(fluencyScore.components).map(([key, score]) => {
+              const labels = {
+                promptMastery: 'Prompt Mastery',
+                technicalUnderstanding: 'Technical',
+                practicalApplication: 'Practical',
+                criticalEvaluation: 'Critical Eval',
+                workflowDesign: 'Workflow'
+              };
+              const pct = (score / 10) * 100;
+              return (
+                <div key={key} style={{ marginBottom: 12 }} title={fluencyScore.componentConnections[key]}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 12, marginBottom: 4 }}>
+                    <span style={{ color: colors.textMuted }}>{labels[key]}</span>
+                    <span style={{ fontWeight: 600, color: colors.text }}>{score}</span>
+                  </div>
+                  <div style={{ height: 6, background: colors.border, borderRadius: 3 }}>
+                    <div style={{ height: '100%', width: `${pct}%`, background: score >= 8.5 ? colors.success : score >= 8 ? colors.accent : colors.warning, borderRadius: 3, transition: 'width 0.3s' }} />
+                  </div>
+                </div>
+              );
+            })}
+            <div style={{ fontSize: 11, color: colors.textDim, marginTop: 12, fontStyle: 'italic' }}>Hover for connection to your work</div>
+          </Card>
+
+          {/* Module Progress */}
           <Card title="Module Progress">
+            <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 16 }}>
+              <div style={{ fontSize: 24, fontWeight: 700 }}>{modules.filter(m => m.status === 'completed').length}/{modules.length}</div>
+              <div style={{ fontSize: 12, color: colors.textDim }}>modules completed</div>
+            </div>
             {modules.map((m, i) => (
               <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '8px 0', borderBottom: i < modules.length - 1 ? `1px solid ${colors.border}` : 'none' }}>
                 <span style={{ width: 20, height: 20, borderRadius: '50%', background: m.status === 'completed' ? colors.successDim : m.status === 'active' ? colors.accentDim : colors.border, color: m.status === 'completed' ? colors.success : m.status === 'active' ? colors.accent : colors.textDim, fontSize: 11, fontWeight: 600, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
