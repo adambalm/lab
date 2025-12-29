@@ -1,0 +1,304 @@
+{
+  "generated": "2025-12-29T05:27:33.607Z",
+  "source": "C:\\Users\\Guest1\\basic-memory\\patterns",
+  "count": 9,
+  "patterns": [
+    {
+      "id": "canonical-overlays",
+      "name": "Canonical Base with Overlays Pattern",
+      "type": "workflow",
+      "status": "canonical",
+      "description": "",
+      "kbPath": "patterns/Canonical Base with Overlays Pattern.md",
+      "problemSignature": [
+        "Skill variants: Same core capability, different audiences (e.g., demo for technical vs. executive)",
+        "Protocol extensions: Base protocol with domain-specific additions",
+        "Template families: Shared structure with context-specific content",
+        "Multi-artifact skills: One skill that produces different outputs for different purposes"
+      ],
+      "templateSummary": "",
+      "gotchas": [],
+      "antiPatterns": [
+        "Genuinely different artifacts that happen to look similar — don't force inheritance",
+        "One-off documents with no expected variants",
+        "When the \"base\" would be so abstract it provides no real constraint"
+      ],
+      "relatedPatterns": [],
+      "example": "- Defines: Tufte styling, navigation pattern, learning loop visualization, WCAG constraints",
+      "coreInsight": "When you need variations without drift, establish a single source of truth (the base) and layer lightweight overlays on top. Overlays add context; they don't fork structure."
+    },
+    {
+      "id": "adversarial-review",
+      "name": "Multi-Agent Adversarial Review Pattern",
+      "type": "prompt",
+      "status": "stable",
+      "description": "``` You are acting as [CHALLENGER_ROLE] reviewing an artifact produced by [PRODUCER_ROLE]. Read thes",
+      "kbPath": "patterns/prompt-patterns/Multi-Agent Adversarial Review Pattern.md",
+      "problemSignature": [
+        "You have an artifact (code, proposal, architecture, document) that needs validation",
+        "The artifact was produced by one agent (or yourself) and may contain blind spots",
+        "Requirements exist against which the artifact should be evaluated",
+        "You want structured critique rather than vague feedback",
+        "The evaluating agent may have capabilities the producing agent lacks (e.g., rendering, execution, file access)",
+        "You need actionable dispositions (accept/reject/modify) not just commentary"
+      ],
+      "templateSummary": "``` You are acting as [CHALLENGER_ROLE] reviewing an artifact produced by [PRODUCER_ROLE]. Read these files in order:",
+      "gotchas": [
+        "Requirements must exist — challenger cannot critique against nothing; vague requirements produce vague challenges",
+        "Artifact must be accessible — if challenger can't read the full artifact, critique will be superficial",
+        "Severity calibration — without clear severity definitions, everything becomes \"significant\"",
+        "Disposition discipline — producer must respond to each issue, not cherry-pick; skipped issues create drift",
+        "Capability claims must be true — if you say \"you can see the rendering\" but the agent can't, critique fails",
+        "Human gate placement — pattern produces structured disagreement; someone must decide unresolved disputes"
+      ],
+      "antiPatterns": [
+        "Artifact is trivial → overhead of structured review exceeds value",
+        "No requirements exist → write requirements first, then review",
+        "Producer and challenger are same agent in same context → genuine adversarial tension unlikely",
+        "Time pressure is extreme → pattern adds latency for multi-turn exchange",
+        "Critique isn't actionable → if producer can't modify artifact, why challenge it?"
+      ],
+      "relatedPatterns": [
+        "lanesborough",
+        "decisions/lanesborough-logs/lanesborough-log---demo-artifact-workflow-negotiation",
+        "decisions/lanesborough-logs/lanesborough-log---pii-redaction-decision",
+        "selective-deep-dive",
+        "black-flag"
+      ],
+      "example": "```"
+    },
+    {
+      "id": "selective-deep-dive",
+      "name": "Selective Deep Dive Pattern",
+      "type": "prompt",
+      "status": "stable",
+      "description": "    Analyze these [ITEMS] and classify them.     [ITEM_LIST with cheap signals only: metadata, previ",
+      "kbPath": "patterns/prompt-patterns/Selective Deep Dive Pattern.md",
+      "problemSignature": [
+        "You have a collection of N items to process",
+        "Some items can be handled with cheap signals (metadata, preview, title)",
+        "Others require expensive deep analysis (full content, multi-step extraction)",
+        "You don't know which items need deep analysis until you inspect them",
+        "The type of analysis varies by item (not one-size-fits-all)",
+        "Token budget, latency, or cost makes processing everything deeply impractical"
+      ],
+      "templateSummary": "    Analyze these [ITEMS] and classify them.     [ITEM_LIST with cheap signals only: metadata, preview, title]     Respond with:",
+      "gotchas": [
+        "Hint quality determines Pass 2 value — vague hints produce vague extraction",
+        "Pass 1 must be conservative — better to flag too many than miss important items",
+        "Token math — if >50% of items get flagged, you've lost the efficiency benefit",
+        "Latency compounds — Pass 2 is sequential; many flagged items = slow",
+        "Model capability floor — Pass 1 model must be smart enough to generate useful hints"
+      ],
+      "antiPatterns": [
+        "All items need the same depth of analysis → just process them all",
+        "Cheap signals are unreliable → triage will misclassify",
+        "Deep analysis is cheap → no benefit from selectivity",
+        "Single item processing → pattern assumes collection"
+      ],
+      "relatedPatterns": [
+        "chain-of-thought",
+        "black-flag",
+        "memento---selective-deep-dive-implementation"
+      ],
+      "example": "- Pass 1: Classify tabs by URL/title, flag research papers needing abstract extraction"
+    },
+    {
+      "id": "skill-forge",
+      "name": "Skill Forge Pattern",
+      "type": "workflow",
+      "status": "draft",
+      "description": "Skill Forge is a deliberative process that converts qualified human articulation—arrived at through heterogeneous model paraphrase and adversarial rev",
+      "kbPath": "patterns/Skill Forge Pattern.md",
+      "problemSignature": [
+        "You face a novel problem requiring judgment beyond routine application of existing knowledge",
+        "The problem domain is technically complex such that a single model (or single human) may have blindspots",
+        "You need the human decision-maker to be genuinely qualified, not rubber-stamping",
+        "The class of problem is likely to recur, making the upfront deliberation cost worthwhile",
+        "You want to accumulate executive capacity over time, not just make isolated decisions"
+      ],
+      "templateSummary": "### 1. Novel Problem Triggers Full Deliberation\r \r When existing skills don't apply or fail, invoke the full protocol:\r \r 1. **Human initiates** → prompts Model A for proposal\r 2. **Paraphrase-verify cycle** → Model B paraphrases, Model A confirms/corrects understanding (NOT agreement)\r 3. **Underst",
+      "gotchas": [],
+      "antiPatterns": [
+        "Using for trivial decisions — overhead exceeds value; invoke existing skills instead",
+        "Skipping human articulation — produces AI consensus, not qualified human judgment",
+        "Homogeneous models — shared blindspots defeat the purpose",
+        "Not capturing the skill — deliberation cost is wasted if not amortized",
+        "Routing around failures — skill failures must return to the forge, not be patched ad-hoc"
+      ],
+      "relatedPatterns": [
+        "lanesborough",
+        "black-flag",
+        "temporal-validity",
+        "multi-agent-adversarial-review"
+      ],
+      "example": "",
+      "coreInsight": "## Core Insight"
+    },
+    {
+      "id": "cross-examination",
+      "name": "Structured Cross-Examination Pattern",
+      "type": "prompt",
+      "status": "stable",
+      "description": "The pattern has four elements: 1. **Persona roles** — Distinct perspectives that question the claim ",
+      "kbPath": "patterns/prompt-patterns/Structured Cross-Examination Pattern.md",
+      "problemSignature": [
+        "Selective Deep Dive Pattern: Decomposes a problem space to identify which items warrant deeper analysis",
+        "Multi-Agent Adversarial Review Pattern: Critiques an existing artifact against requirements",
+        "Structured Cross-Examination Pattern: Stress-tests a claim or proposal through multi-persona questioning before committing to implementation Use this pattern when:",
+        "You have a claim, proposal, or idea that needs stress-testing before commitment",
+        "The claim may contain hidden assumptions, edge cases, or failure modes you haven't identified",
+        "You want structured questioning rather than open-ended brainstorming",
+        "Multiple perspectives or expertise domains are relevant (technical, strategic, skeptical, domain-specific)",
+        "You need to surface uncertainty explicitly rather than paper over it",
+        "An optional certainty threshold would help prevent premature conclusions"
+      ],
+      "templateSummary": "The pattern has four elements: 1. **Persona roles** — Distinct perspectives that question the claim from different angles 2. **One-question pacing** — Each turn advances exactly one question to prevent reasoning drift",
+      "gotchas": [
+        "Certainty threshold is a heuristic, not a guarantee — the pattern surfaces uncertainty but cannot verify truth",
+        "Persona quality matters — vague role descriptions produce generic challenges",
+        "One-question pacing requires discipline — models tend to bundle multiple questions; enforce the constraint explicitly",
+        "Evidence rule is only as good as available artifacts — if no documentation exists, claims remain ungrounded",
+        "Cross-examination can deadlock — if no evidence resolves a dispute, escalate to human decision rather than forcing closure",
+        "Role contamination — same model playing multiple personas may produce false consensus; consider using different models for adversarial roles"
+      ],
+      "antiPatterns": [
+        "Claim is trivial or uncontroversial → overhead exceeds value",
+        "An artifact already exists → use [[Multi-Agent Adversarial Review Pattern]] instead",
+        "No adversarial tension needed → simple review suffices",
+        "Time pressure is extreme → pattern adds latency for multi-turn exchange",
+        "Evaluation requires running experiments → pattern exposes assumptions but cannot execute tests",
+        "You want a decision → pattern surfaces uncertainty, does not resolve it"
+      ],
+      "relatedPatterns": [
+        "multi-agent-adversarial-review",
+        "selective-deep-dive",
+        "black-flag"
+      ],
+      "example": "- Dr. Aurix-7 (Moderator): Impartial questioner, numbered questions, ≥90% confidence gate"
+    },
+    {
+      "id": "systematic-iteration",
+      "name": "Systematic Prompt Iteration Protocol",
+      "type": "prompt",
+      "status": "draft",
+      "description": "1. **Define measurable success criteria** (2-3 metrics)    - Must be countable/scorable, not subject",
+      "kbPath": "patterns/prompt-patterns/Systematic Prompt Iteration Protocol.md",
+      "problemSignature": [
+        "A prompt works inconsistently and you're not sure why",
+        "You've been tweaking prompts based on intuition rather than data",
+        "Multiple models exhibit similar failure modes (suggests prompt issue, not model issue)",
+        "You need to distinguish signal from noise in prompt experiments",
+        "You want compounding improvement rather than random walks This is a meta-pattern — it applies to improving any other pattern or prompt."
+      ],
+      "templateSummary": "1. **Define measurable success criteria** (2-3 metrics)    - Must be countable/scorable, not subjective    - Example: \"% of items classified\", \"generates valid output on first attempt\", \"includes all specified components\"",
+      "gotchas": [
+        "Don't change multiple things — you won't know what worked",
+        "Same conditions matter — compare runs on similar inputs",
+        "Negative results are data — document what didn't work",
+        "Verbal emphasis can backfire — adding pressure without structural support may degrade performance",
+        "3 runs minimum — single runs don't show consistency"
+      ],
+      "antiPatterns": [
+        "When you're exploring a new domain and don't yet know what success looks like",
+        "When the prompt is working fine (don't fix what isn't broken)",
+        "When you can't define measurable success criteria",
+        "For creative/open-ended tasks where \"success\" is subjective"
+      ],
+      "relatedPatterns": [
+        "selective-deep-dive",
+        "visualization-generator",
+        "multi-agent-adversarial-review",
+        "memento---tab-loss-root-cause-analysis"
+      ],
+      "example": "",
+      "coreInsight": "Verbal instructions are weak constraints. Structural requirements are strong constraints.",
+      "meta": true
+    },
+    {
+      "id": "targeted-artifact-generation",
+      "name": "Targeted Artifact Generation Pattern",
+      "type": "workflow",
+      "status": "draft",
+      "description": "",
+      "kbPath": "patterns/Targeted Artifact Generation Pattern.md",
+      "problemSignature": [],
+      "templateSummary": "",
+      "gotchas": [],
+      "antiPatterns": [],
+      "relatedPatterns": [
+        "product-positioning-—-core-value-proposition",
+        "lightweight-crm-pattern-for-basic-memory",
+        "umass-application-demo",
+        "black-flag"
+      ],
+      "example": ""
+    },
+    {
+      "id": "ui-experimentation",
+      "name": "UI Experimentation to Automation Pattern",
+      "type": "workflow",
+      "status": "draft",
+      "description": "",
+      "kbPath": "patterns/UI Experimentation to Automation Pattern.md",
+      "problemSignature": [
+        "[use_case] Learning a new model's capabilities",
+        "[use_case] Prompt engineering and iteration",
+        "[use_case] Parameter sensitivity testing",
+        "[use_case] Quality tuning with human judgment",
+        "[use_case] Creative exploration",
+        "[use_case] One-off or artistic work ### Python/Automation (diffusers, scripts, APIs)",
+        "[use_case] Defined, repeatable workflows",
+        "[use_case] Batch processing",
+        "[use_case] Pipeline integration",
+        "[use_case] Agent-operated tasks",
+        "[use_case] Production deployment",
+        "[use_case] Version-controlled reproducibility"
+      ],
+      "templateSummary": "",
+      "gotchas": [],
+      "antiPatterns": [],
+      "relatedPatterns": [],
+      "example": "- Test prompts for realistic skin movement",
+      "coreInsight": "Visual UI tools and Python automation are complementary phases, not competing approaches. Same model, same outputs — different purposes.  This is a canary."
+    },
+    {
+      "id": "visualization-generator",
+      "name": "Visualization Generator Pattern",
+      "type": "prompt",
+      "status": "stable",
+      "description": "``` Generate a [VISUALIZATION_TYPE] for the following [CONTENT_TYPE]: [CONTENT]",
+      "kbPath": "patterns/prompt-patterns/Visualization Generator Pattern.md",
+      "problemSignature": [
+        "You have abstract information (concepts, workflows, relationships, hierarchies) that would benefit from spatial representation",
+        "Text-based explanation feels inadequate or hard to follow",
+        "You need to communicate complex ideas to an audience (presentation, documentation, architecture review)",
+        "You want to scaffold a presentation by generating slide outlines or diagram structures",
+        "You need to organize workflow steps spatially before implementation",
+        "The output will feed into a visualization tool (Mermaid, Graphviz, slide software, diagramming apps) This pattern transforms content into structured visual representations. Outputs can include bullet hierarchies, tables, trees, flow diagrams, timeline layouts, decision trees, or slide-ready structures."
+      ],
+      "templateSummary": "``` Generate a [VISUALIZATION_TYPE] for the following [CONTENT_TYPE]: [CONTENT]",
+      "gotchas": [
+        "Models may hallucinate precise numbers or invent process nodes — visualization should simplify and structure, not fabricate detail",
+        "Syntax errors in diagram code — Mermaid/Graphviz output sometimes has minor syntax issues; validate before rendering",
+        "Over-complexity — models tend to include everything; specify \"keep to N nodes\" or \"top-level only\" to constrain",
+        "Format mismatch — some content types don't fit certain visualization formats; a timeline doesn't work for a taxonomy",
+        "Loss of nuance — spatial representation necessarily simplifies; important caveats may be dropped",
+        "Tool compatibility — not all Mermaid/Graphviz features work in all renderers; test output in target tool"
+      ],
+      "antiPatterns": [
+        "Graphical form distorts nuance — some arguments require prose to convey qualification and uncertainty",
+        "Linear prose is clearer — not everything benefits from spatialization; simple explanations may be better as paragraphs",
+        "Underlying data is uncertain — visualizing speculative information reifies it inappropriately",
+        "Audience prefers text — some readers find diagrams harder to parse than prose",
+        "High-fidelity diagram needed — for publication-quality graphics, use dedicated design tools rather than LLM-generated syntax"
+      ],
+      "relatedPatterns": [
+        "selective-deep-dive",
+        "multi-agent-adversarial-review",
+        "structured-cross-examination"
+      ],
+      "example": "```"
+    }
+  ]
+}

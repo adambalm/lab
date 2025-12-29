@@ -18,11 +18,14 @@
 <body>
   <div id="root"></div>
   <script type="text/babel">
-const { useState } = React;
+const { useState, useEffect } = React;
 
 // =============================================================================
 // DATA: Decision History is the spine - everything links to/from it
 // =============================================================================
+
+// Patterns are loaded from patterns-data.json (synced from Basic Memory)
+// Run: node sync-patterns.js to update
 
 const decisions = [
   {
@@ -73,7 +76,9 @@ const decisions = [
   }
 ];
 
-const patterns = [
+// Patterns will be loaded from patterns-data.json via useEffect in AICREDDashboard
+// This fallback is used if fetch fails
+const fallbackPatterns = [
   {
     id: 'selective-deep-dive',
     name: 'Selective Deep Dive Pattern',
@@ -81,185 +86,12 @@ const patterns = [
     status: 'stable',
     description: 'Two-pass: classify + triage → conditional deep analysis with hints',
     kbPath: 'patterns/prompt-patterns/Selective Deep Dive Pattern.md',
-    problemSignature: [
-      'You have a collection of N items to process',
-      'Some items can be handled with cheap signals (metadata, title)',
-      'Others require expensive deep analysis (full content, multi-step)',
-      'You don\'t know which items need deep analysis until you inspect them',
-      'Token budget makes processing everything deeply impractical'
-    ],
-    templateSummary: 'Pass 1: Classify items, flag those needing depth, generate extraction hints. Pass 2: Deep analysis only for flagged items using self-generated hints.',
-    gotchas: [
-      'Hint quality determines Pass 2 value — vague hints produce vague extraction',
-      'Pass 1 must be conservative — better to flag too many than miss important items',
-      'If >50% of items get flagged, you\'ve lost the efficiency benefit',
-      'Model capability floor — Pass 1 model must be smart enough to generate useful hints'
-    ],
-    antiPatterns: [
-      'All items need the same depth of analysis → just process them all',
-      'Cheap signals are unreliable → triage will misclassify',
-      'Deep analysis is cheap → no benefit from selectivity',
-      'Single item processing → pattern assumes collection'
-    ],
-    relatedPatterns: ['systematic-iteration', 'adversarial-review'],
+    problemSignature: ['Collection processing with mixed-depth items'],
+    templateSummary: 'Pass 1: Classify and flag. Pass 2: Deep analysis on flagged items.',
+    gotchas: ['Hint quality matters', 'Pass 1 must be conservative'],
+    antiPatterns: ['All items need same depth', 'Single item processing'],
+    relatedPatterns: ['systematic-iteration'],
     example: 'Memento browser session classifier'
-  },
-  {
-    id: 'systematic-iteration',
-    name: 'Systematic Prompt Iteration Protocol',
-    type: 'prompt',
-    status: 'stable',
-    meta: true,
-    description: 'Baseline → Hypothesis → Minimal Variant → Test → Compare',
-    kbPath: 'patterns/prompt-patterns/Systematic Prompt Iteration Protocol.md',
-    problemSignature: [
-      'A prompt works inconsistently and you\'re not sure why',
-      'You\'ve been tweaking prompts based on intuition rather than data',
-      'Multiple models exhibit similar failure modes (suggests prompt issue)',
-      'You need to distinguish signal from noise in prompt experiments',
-      'You want compounding improvement rather than random walks'
-    ],
-    templateSummary: 'Phase 1: Define metrics, run 3+ times, record baseline. Phase 2: Identify ONE failure mode, form hypothesis, design minimal variant. Phase 3: Test variant 3+ times, compare. Phase 4: Variant becomes new baseline or document what didn\'t work.',
-    coreInsight: 'Structural constraints beat verbal emphasis. If you want behavior X, don\'t tell the model "please do X" — design an output format where not doing X would be syntactically incomplete.',
-    gotchas: [
-      'Don\'t change multiple things at once — you won\'t know what worked',
-      'Compare runs on similar inputs — same conditions matter',
-      'Negative results are data — document what didn\'t work',
-      'Verbal emphasis can backfire — "CRITICAL" may degrade performance',
-      '3 runs minimum — single runs don\'t show consistency'
-    ],
-    antiPatterns: [
-      'Exploring a new domain and don\'t yet know what success looks like',
-      'The prompt is working fine (don\'t fix what isn\'t broken)',
-      'You can\'t define measurable success criteria',
-      'Creative/open-ended tasks where "success" is subjective'
-    ],
-    relatedPatterns: ['selective-deep-dive', 'adversarial-review'],
-    example: 'Memento Tab Classifier: 26% → 100% via structural constraint'
-  },
-  {
-    id: 'adversarial-review',
-    name: 'Multi-Agent Adversarial Review Pattern',
-    type: 'prompt',
-    status: 'stable',
-    description: 'Challenger role → issue/evidence/severity/fix format → disposition table',
-    kbPath: 'patterns/prompt-patterns/Multi-Agent Adversarial Review Pattern.md',
-    problemSignature: [
-      'You have an artifact (code, proposal, document) that needs validation',
-      'The artifact was produced by one agent and may contain blind spots',
-      'Requirements exist against which the artifact should be evaluated',
-      'You want structured critique rather than vague feedback',
-      'The evaluating agent may have capabilities the producer lacks',
-      'You need actionable dispositions (accept/reject/modify) not just commentary'
-    ],
-    templateSummary: 'Challenger reads requirements + artifact, issues structured critique with evidence/severity/fix. Producer responds with disposition table: ACCEPT, MODIFY, REJECT, or DEFER for each issue.',
-    gotchas: [
-      'Requirements must exist — challenger cannot critique against nothing',
-      'Artifact must be accessible — if challenger can\'t read it, critique is superficial',
-      'Severity calibration — without definitions, everything becomes "significant"',
-      'Disposition discipline — producer must respond to each issue, not cherry-pick',
-      'Capability claims must be true — don\'t claim "you can see the rendering" if agent can\'t'
-    ],
-    antiPatterns: [
-      'Artifact is trivial → overhead exceeds value',
-      'No requirements exist → write requirements first',
-      'Producer and challenger are same agent in same context',
-      'Time pressure is extreme → adds latency for multi-turn exchange',
-      'Critique isn\'t actionable → if producer can\'t modify artifact, why challenge it?'
-    ],
-    relatedPatterns: ['cross-examination', 'skill-forge'],
-    example: 'JSX Demo artifact inspection under Lanesborough Protocol'
-  },
-  {
-    id: 'cross-examination',
-    name: 'Structured Cross-Examination Pattern',
-    type: 'prompt',
-    status: 'stable',
-    description: 'Multi-persona questioning with one-question pacing and evidence requirements',
-    kbPath: 'patterns/prompt-patterns/Structured Cross-Examination Pattern.md',
-    problemSignature: [
-      'You have a claim, proposal, or idea that needs stress-testing BEFORE artifact exists',
-      'The claim may contain hidden assumptions, edge cases, or failure modes',
-      'Multiple perspectives or expertise domains are relevant',
-      'You want structured questioning rather than open-ended brainstorming',
-      'You need to surface uncertainty explicitly rather than paper over it',
-      'An optional certainty threshold would help prevent premature conclusions'
-    ],
-    templateSummary: 'Assign personas (Moderator, Advocate, Skeptic, Specialist). Moderator asks one question at a time. Claims must cite evidence. No proceeding until prior question resolved. Loop until questions resolved or uncertainty explicitly acknowledged.',
-    gotchas: [
-      'Certainty threshold is a heuristic, not a guarantee',
-      'Persona quality matters — vague descriptions produce generic challenges',
-      'One-question pacing requires discipline — models tend to bundle',
-      'Evidence rule only as good as available artifacts',
-      'Cross-examination can deadlock — escalate to human rather than force closure',
-      'Role contamination — same model playing multiple personas may produce false consensus'
-    ],
-    antiPatterns: [
-      'Claim is trivial or uncontroversial → overhead exceeds value',
-      'Artifact already exists → use Adversarial Review instead',
-      'No adversarial tension needed → simple review suffices',
-      'You want a decision → pattern surfaces uncertainty, does not resolve it'
-    ],
-    relatedPatterns: ['adversarial-review', 'selective-deep-dive'],
-    example: 'Grok Write Access Proposal evaluation (CIO/VP/Developer roles)'
-  },
-  {
-    id: 'skill-forge',
-    name: 'Skill Forge Pattern',
-    type: 'workflow',
-    status: 'draft',
-    description: 'Heterogeneous deliberation → human articulation → reusable skill',
-    kbPath: 'patterns/Skill Forge Pattern.md',
-    problemSignature: [
-      'You face a novel problem requiring judgment beyond routine application',
-      'The problem domain is technically complex — single model may have blindspots',
-      'You need the human decision-maker to be genuinely qualified, not rubber-stamping',
-      'The class of problem is likely to recur, making upfront deliberation cost worthwhile',
-      'You want to accumulate executive capacity over time, not just make isolated decisions'
-    ],
-    templateSummary: 'Novel problem triggers full deliberation: Model A proposes, Model B paraphrases with verification flags, understanding gate closes, substantive critique, agreement gate. Human articulates outcome in own words (success test). Articulation compiled into reusable skill.',
-    coreInsight: 'Goal is qualified human judgment, not AI consensus. Paraphrase is adversarial verification, not passive restatement. If human cannot articulate core in own words, protocol failed.',
-    gotchas: [
-      'Using for trivial decisions → overhead exceeds value; invoke existing skills instead',
-      'Skipping human articulation → produces AI consensus, not qualified judgment',
-      'Homogeneous models → shared blindspots defeat the purpose',
-      'Not capturing the skill → deliberation cost is wasted if not amortized',
-      'Routing around failures → skill failures must return to forge, not be patched ad-hoc'
-    ],
-    antiPatterns: [
-      'Trivial decisions where existing skills apply',
-      'Skipping human articulation step',
-      'Using models with same training/priors (no swiss cheese coverage)'
-    ],
-    relatedPatterns: ['adversarial-review', 'cross-examination'],
-    example: 'Stevens Essay (rejected — problem class doesn\'t recur)'
-  },
-  {
-    id: 'canonical-overlays',
-    name: 'Canonical Base with Overlays Pattern',
-    type: 'architectural',
-    status: 'stable',
-    description: 'Single source of truth → lightweight overlays that link back',
-    kbPath: 'patterns/Canonical Base with Overlays Pattern.md',
-    problemSignature: [
-      'You need variations of something without risking drift',
-      'Multiple audiences or contexts require adapted versions',
-      'Feedback should flow to one source of truth',
-      'Maintenance is multiplying with each variant'
-    ],
-    templateSummary: 'Base document defines structure, styling, constraints. Overlays link back to base, add audience framing. Changes flow down from base. Deviations documented with rationale. Don\'t duplicate — link.',
-    gotchas: [
-      'Don\'t duplicate content — if copying from base to overlay, you\'re doing it wrong',
-      'Feedback updates the base first, not individual overlays',
-      'Deviations require explicit rationale to make drift auditable'
-    ],
-    antiPatterns: [
-      'Genuinely different artifacts that happen to look similar',
-      'One-off documents with no expected variants',
-      'Base would be so abstract it provides no real constraint'
-    ],
-    relatedPatterns: [],
-    example: 'Demo thin skill with Tim/Sean/system-docs overlays'
   }
 ];
 
@@ -387,7 +219,7 @@ function ScoreRing({ score, target, size = 120 }) {
 }
 
 // Decision Card with links to patterns
-function DecisionCard({ decision, onPatternClick }) {
+function DecisionCard({ decision, onPatternClick, patterns = [] }) {
   const statusColor = { completed: colors.success, abandoned: colors.warning, rejected: colors.danger }[decision.status];
   const patternsInvolved = [...(decision.patternsConsidered || []), ...(decision.patternsUsed || [])];
 
@@ -552,7 +384,7 @@ function PatternCard({ pattern, expanded, onToggle, onDecisionClick }) {
 }
 
 // Problem-First Navigator
-function ProblemFirstNav({ items, onPatternClick, onDecisionClick }) {
+function ProblemFirstNav({ items, onPatternClick, onDecisionClick, patterns = [] }) {
   const [expanded, setExpanded] = useState({});
 
   return (
@@ -625,6 +457,24 @@ function ResumeWithClaude() {
 function AICREDDashboard() {
   const [activeTab, setActiveTab] = useState('overview');
   const [expandedPatterns, setExpandedPatterns] = useState({});
+  const [patterns, setPatterns] = useState(fallbackPatterns);
+  const [patternsLoading, setPatternsLoading] = useState(true);
+
+  // Load patterns from patterns-data.json (synced from Basic Memory)
+  useEffect(() => {
+    fetch('patterns-data.json')
+      .then(res => res.json())
+      .then(data => {
+        if (data.patterns && data.patterns.length > 0) {
+          setPatterns(data.patterns);
+        }
+        setPatternsLoading(false);
+      })
+      .catch(err => {
+        console.warn('Could not load patterns-data.json, using fallback:', err);
+        setPatternsLoading(false);
+      });
+  }, []);
 
   const tabs = [
     { id: 'overview', label: 'Overview' },
@@ -689,7 +539,7 @@ function AICREDDashboard() {
           </Card>
 
           <Card title="Latest Decision" style={{ gridColumn: 'span 2' }}>
-            <DecisionCard decision={decisions.find(d => d.id === 'jsx-gitpages')} onPatternClick={handlePatternClick} />
+            <DecisionCard decision={decisions.find(d => d.id === 'jsx-gitpages')} onPatternClick={handlePatternClick} patterns={patterns} />
           </Card>
 
           <ResumeWithClaude />
@@ -705,7 +555,7 @@ function AICREDDashboard() {
             </p>
             {decisions.filter(d => d.module === 4).map(d => (
               <div key={d.id} id={`decision-${d.id}`}>
-                <DecisionCard decision={d} onPatternClick={handlePatternClick} />
+                <DecisionCard decision={d} onPatternClick={handlePatternClick} patterns={patterns} />
               </div>
             ))}
           </Card>
@@ -713,7 +563,7 @@ function AICREDDashboard() {
           <Card title="Earlier Decisions" style={{ marginTop: 20 }}>
             {decisions.filter(d => d.module !== 4).map(d => (
               <div key={d.id} id={`decision-${d.id}`}>
-                <DecisionCard decision={d} onPatternClick={handlePatternClick} />
+                <DecisionCard decision={d} onPatternClick={handlePatternClick} patterns={patterns} />
               </div>
             ))}
           </Card>
@@ -725,7 +575,7 @@ function AICREDDashboard() {
       {/* PATTERN LIBRARY TAB */}
       {activeTab === 'patterns' && (
         <div>
-          <ProblemFirstNav items={problemFirstNav} onPatternClick={handlePatternClick} onDecisionClick={handleDecisionClick} />
+          <ProblemFirstNav items={problemFirstNav} onPatternClick={handlePatternClick} onDecisionClick={handleDecisionClick} patterns={patterns} />
 
           <Card title="Pattern Cards">
             <p style={{ margin: '0 0 16px 0', fontSize: 13, color: colors.textMuted }}>
